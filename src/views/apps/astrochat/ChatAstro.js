@@ -36,7 +36,7 @@ class ChatApp extends React.Component {
       minutes: 15,
       ModdleToggle: false,
       indexValue: 0,
-      checkroomflag:true
+      checkroomflag: true,
     };
     this.timer = 0;
     this.startTimer = this.startTimer.bind(this);
@@ -322,7 +322,7 @@ class ChatApp extends React.Component {
   submitHandler = async (e) => {
     e.preventDefault();
     // debugger;
-let {  userId, astroId } = this.state;
+    let { userId, astroId } = this.state;
     if (this.state.msg !== "" || this.state.msg.length === 0) {
       let obj = {
         reciver: this.state.userId,
@@ -361,49 +361,47 @@ let {  userId, astroId } = this.state;
 
       if (!this.state.timerStartFlag) {
         this.handleStart();
+        setInterval(() => {
+          this.handleStart();
+        }, 10000);
         this.setState({ timerStartFlag: true });
       }
     } else {
       this.setState({ tooglebtn: true });
     }
 
-
-
-if(this.state.checkroomflag){
-  let value = {
-    astroId: astroId,
-    userId: userId
-  };
-  console.log(value);
-  const id = setInterval(() => {
-    console.log('intervelis running');
-    axiosConfig
-      .post(`/user/checkroom`, value)
-      .then((response) => {
-    
-        if (response.data.roomstatus === 0) {
-          Swal.fire({
-            title: "User Left",
-            timer:2000
-          });
-          setTimeout(() => {
+    if (this.state.checkroomflag) {
+      let value = {
+        astroId: astroId,
+        userId: userId,
+      };
+      console.log(value);
+      const id = setInterval(() => {
+        console.log("intervelis running");
+        axiosConfig
+          .post(`/user/checkroom`, value)
+          .then((response) => {
+            if (response.data.roomstatus === 0) {
+              Swal.fire({
+                title: "User Left",
+                width: "300px",
+                timer: 2000,
+              });
+              setTimeout(() => {
+                window.location.href = "/";
+              }, 1000);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
             window.location.href = "/";
-          }, 1000);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        window.location.href = '/';
-        clearInterval(id); 
-  
-      });
-  }, 3000);
-  
-  sessionStorage.setItem("intervalforroom", id);
-  this.serState ({checkroomflag: false})
-};
+            clearInterval(id);
+          });
+      }, 3000);
 
-
+      sessionStorage.setItem("intervalforroom", id);
+      this.serState({ checkroomflag: false });
+    }
   };
 
   handleChange = (e) => {
@@ -463,20 +461,29 @@ if(this.state.checkroomflag){
   };
 
   handleStart = () => {
-    let userId = JSON.parse(localStorage.getItem("user_id"));
+    let userId = localStorage.getItem("CurrentChat_userid");
     let astroId = localStorage.getItem("astroId");
     //  sessionStorage.setItem("typeofcall", "Video");
-
+    console.log(userId, astroId);
     let payload = {
       userId: userId,
       astroId: astroId,
       type: "chat",
     };
+    axiosConfig
+      .post("/user/timer", payload)
+      .then((res) => {
+        const value = res.data;
+        console.log("/user/timer", value);
+        this.setState({ setTimer: value.timer.currentValue });
+        clearInterval(this.countRef.current);
+        this.countRef.current = setInterval(() => {
+          this.setState({ setTimer: this.state.setTimer + 1 });
+        }, 1000);
+      })
+      .catch((err) => {});
 
     // this.setState({ counterState: false });
-    this.countRef.current = setInterval(() => {
-      this.setState({ setTimer: this.state.setTimer + 1 });
-    }, 1000);
   };
 
   handlePause = () => {

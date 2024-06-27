@@ -26,7 +26,8 @@ class AnalyticsDashboard extends React.Component {
   }
 
   async componentDidMount() {
-    const astroId = localStorage.getItem("astroId");
+    const astroId = localStorage.getItem("astroId");//
+    const userId = localStorage.getItem("user_id");
     await axiosConfig
       .get(`/user/wait_queue_list/${astroId}`)
       .then((res) => {
@@ -101,6 +102,18 @@ class AnalyticsDashboard extends React.Component {
       .then((response) => {
         this.setState({ earn: response?.data?.data?.total });
       });
+      
+      let value = {
+        astroId: astroId,
+        userId: userId,
+      };
+      axiosConfig.post("/user/checkroom", value)
+          .then((response) => {
+            }
+          )
+          .catch((error) => {
+            console.log(error);
+          });
   }
 
   render() {

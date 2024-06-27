@@ -67,6 +67,7 @@ const NavbarUser = () => {
     await axiosConfig
       .get(`/user/wait_queue_list/${astroId}`)
       .then((res) => {
+        console.log(res);
         setAstronotification(res.data.data);
         setViewnotify(res.data.count);
       })
@@ -231,12 +232,13 @@ const NavbarUser = () => {
     axiosConfig
       .post(`/user/acceptNotificationByAstro/${data?._id}`, accept)
       .then((res) => {
-        // console.log(res.data);
+        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
 
+    
     if (data?.type === "Chat") {
       history.push({ pathname: "/app/astrochat/chatastro", state: {...data,toggleMogel:true} });
     }
