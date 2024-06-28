@@ -240,6 +240,7 @@ const NavbarUser = () => {
 
     
     if (data?.type === "Chat") {
+
       history.push({ pathname: "/app/astrochat/chatastro", state: {...data,toggleMogel:true} });
     }
     if (data?.type === "Video" && data.videoLink) {
