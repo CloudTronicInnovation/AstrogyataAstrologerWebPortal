@@ -23,7 +23,6 @@ import "moment-timezone";
 import moment from "moment";
 import swal from "sweetalert";
 
-
 const handleNavigation = (e, path) => {
   e.preventDefault();
   window.location.replace(path);
@@ -57,7 +56,6 @@ const NavbarUser = () => {
       })
       .catch((err) => {
         swal("Logout Api not Working ");
-        
       });
   };
 
@@ -113,7 +111,6 @@ const NavbarUser = () => {
     e.preventDefault();
     let astroid = localStorage.getItem("astroId");
 
-
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: "btn btn-success",
@@ -121,90 +118,90 @@ const NavbarUser = () => {
       },
       buttonsStyling: false,
     });
-  
+
     // Determine the appropriate title and button text based on the current status
     const title =
-    ButtonText === "Online" ? "Are You Sure To Go Offline?" : "Are You Sure To Go Online?";
-  const confirmButtonText =
-    ButtonText === "Online" ? "Offline" : "Online";
-  
-  swalWithBootstrapButtons.fire({
-    title: title,
-    icon: "info",
-    showCancelButton: true,
-    confirmButtonText: confirmButtonText,
-    cancelButtonText: "Cancel",
-    // reverseButtons: true,
-    width: '300px',
-    didOpen: () => {
-      // Access the SweetAlert2 elements and apply inline styles
-      const swalTitle = document.querySelector('.swal2-title');
-      const swalContent = document.querySelector('.swal2-html-container');
-      const swalConfirmButton = document.querySelector('.swal2-confirm');
-      const swalCancelButton = document.querySelector('.swal2-cancel');
-  
-        if (swalTitle) {
-      swalTitle.style.fontSize = '20px'; // Change this to your desired font size
-    }
-    if (swalContent) {
-      swalContent.style.fontSize = '16px'; // Change this to your desired font size
-    }
-    if (swalConfirmButton) {
-      swalConfirmButton.style.fontSize = '14px'; // Change this to your desired font size
-      swalConfirmButton.style.padding = '10px 10px'; // Adjust padding for smaller button
-      swalCancelButton.style.margin = '30px';
-      swalConfirmButton.style.minWidth = 'auto'; // Adjust width if needed
-    }
-    if (swalCancelButton) {
-      swalCancelButton.style.fontSize = '14px'; // Change this to your desired font size
-      swalCancelButton.style.padding = '10px 10px'; // Adjust padding for smaller button
-      swalCancelButton.style.margin = '20px';
-      swalCancelButton.style.minWidth = 'auto'; // Adjust width if needed
-    }
-  }
-})
-  
-    .then((result) => {
-      if (result.isConfirmed) {
-        // User confirmed, proceed with status change
-        axiosConfig
-          .post(`/user/status_change/${astroid}`, {
-            status: ButtonText === "Online" ? "Offline" : "Online",
-          })
-          .then((res) => {
-            console.log(res.data);
-            if (res.data.message === "success") {
-              // Toggle the ButtonText based on the current status
-              setButtonText(ButtonText === "Online" ? "Offline" : "Online");
-              if (ButtonText === "Offline") {
-                // Show notification if status is set to "Online"
-                Swal.fire({
-                  icon: "success",
-                  title: "Status is Online",
-                  width: '300px',
-                  timer: 1000
-                });
+      ButtonText === "Online"
+        ? "Are You Sure To Go Offline?"
+        : "Are You Sure To Go Online?";
+    const confirmButtonText = ButtonText === "Online" ? "Offline" : "Online";
+
+    swalWithBootstrapButtons
+      .fire({
+        title: title,
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonText: confirmButtonText,
+        cancelButtonText: "Cancel",
+        // reverseButtons: true,
+        width: "300px",
+        didOpen: () => {
+          // Access the SweetAlert2 elements and apply inline styles
+          const swalTitle = document.querySelector(".swal2-title");
+          const swalContent = document.querySelector(".swal2-html-container");
+          const swalConfirmButton = document.querySelector(".swal2-confirm");
+          const swalCancelButton = document.querySelector(".swal2-cancel");
+
+          if (swalTitle) {
+            swalTitle.style.fontSize = "20px"; // Change this to your desired font size
+          }
+          if (swalContent) {
+            swalContent.style.fontSize = "16px"; // Change this to your desired font size
+          }
+          if (swalConfirmButton) {
+            swalConfirmButton.style.fontSize = "14px"; // Change this to your desired font size
+            swalConfirmButton.style.padding = "10px 10px"; // Adjust padding for smaller button
+            swalCancelButton.style.margin = "30px";
+            swalConfirmButton.style.minWidth = "auto"; // Adjust width if needed
+          }
+          if (swalCancelButton) {
+            swalCancelButton.style.fontSize = "14px"; // Change this to your desired font size
+            swalCancelButton.style.padding = "10px 10px"; // Adjust padding for smaller button
+            swalCancelButton.style.margin = "20px";
+            swalCancelButton.style.minWidth = "auto"; // Adjust width if needed
+          }
+        },
+      })
+
+      .then((result) => {
+        if (result.isConfirmed) {
+          // User confirmed, proceed with status change
+          axiosConfig
+            .post(`/user/status_change/${astroid}`, {
+              status: ButtonText === "Online" ? "Offline" : "Online",
+            })
+            .then((res) => {
+              console.log(res.data);
+              if (res.data.message === "success") {
+                // Toggle the ButtonText based on the current status
+                setButtonText(ButtonText === "Online" ? "Offline" : "Online");
+                if (ButtonText === "Offline") {
+                  // Show notification if status is set to "Online"
+                  Swal.fire({
+                    icon: "success",
+                    title: "Status is Online",
+                    width: "300px",
+                    timer: 1000,
+                  });
+                }
               }
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        // User denied or cancelled, do nothing 
-        // You may uncomment the following lines if you want to show a message when cancelled
-        // swal("Cancelled", "Status not changed" )
-  
-        // Or if you want to show another alert when cancelled
-        // swalWithBootstrapButtons.fire(
-        //   "Proceed Cancel",
-        //   "Cancelled",
-        //   "error",          
-        // );
-      }
-    });
-  
-  };  
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          // User denied or cancelled, do nothing
+          // You may uncomment the following lines if you want to show a message when cancelled
+          // swal("Cancelled", "Status not changed" )
+          // Or if you want to show another alert when cancelled
+          // swalWithBootstrapButtons.fire(
+          //   "Proceed Cancel",
+          //   "Cancelled",
+          //   "error",
+          // );
+        }
+      });
+  };
 
   const handleshowChangeMode = (e) => {
     e.preventDefault();
@@ -228,6 +225,7 @@ const NavbarUser = () => {
     let accept = {
       status: "Accept",
     };
+    console.log(data);
 
     axiosConfig
       .post(`/user/acceptNotificationByAstro/${data?._id}`, accept)
@@ -238,10 +236,38 @@ const NavbarUser = () => {
         console.log(err);
       });
 
-    
     if (data?.type === "Chat") {
+      console.log(data.type);
+      history.push({
+        pathname: "/app/astrochat/chatastro",
+        state: { ...data, toggleMogel: true },
+      });
+    }
+    if (data?.type === "Call") {
+      const userId= data.userid._id
+      const astroid= data.astroid._id
+      const tono= data.userid.mobile
+      const fromno= data.astroid.mobile
 
-      history.push({ pathname: "/app/astrochat/chatastro", state: {...data,toggleMogel:true} });
+      let obj = {
+        userid: userId,
+        astroid: astroid,
+        From: fromno, //astro no
+        To: tono, //user no
+        type: "Call",
+      };
+
+      axiosConfig
+        .post(`/user/make_call`, obj, {
+        })
+        .then((response) => {
+          swal("Call Connecting", "SuccessFully");
+        })
+        .catch((error) => {
+          swal("Alert", "Call Failed");
+        });
+      // console.log('call');
+      // history.push({ pathname: "/app/astrochat/chatastro", state: {...data,toggleMogel:true} });
     }
     if (data?.type === "Video" && data.videoLink) {
       window.open(`#/app/call/VideoCall/${data?.videoLink}`, data.videoLink);
@@ -309,33 +335,33 @@ const NavbarUser = () => {
             Mark {newStatus && newStatus}
           </Button>
         </li> */}
-          <li>
-       <select 
-      //  onChange={(e) => LanguageSwitcher(e.target.value)} 
-      name="language"
-      id=""
-      className="mt-1 stylish-select"
-      style={{
-        padding: "0.5rem",
-        borderRadius: "5px",
-        border: "1px solid #ccc",
-        backgroundColor: "#f9f9f9",
-        color: "#333",
-        fontSize: "0.7rem",
-        fontFamily: "Arial, sans-serif",
-        width: "80px", // You can adjust the width as needed
-        height: "28px",
-        position: "relative",
-        right: "15%"
-      }}
-    >
-      <option value="en">Language</option>
-      <option value="hi">हिंदी</option>
-      <option value="en">English</option>
-    </select>
+        <li>
+          <select
+            //  onChange={(e) => LanguageSwitcher(e.target.value)}
+            name="language"
+            id=""
+            className="mt-1 stylish-select"
+            style={{
+              padding: "0.5rem",
+              borderRadius: "5px",
+              border: "1px solid #ccc",
+              backgroundColor: "#f9f9f9",
+              color: "#333",
+              fontSize: "0.7rem",
+              fontFamily: "Arial, sans-serif",
+              width: "80px", // You can adjust the width as needed
+              height: "28px",
+              position: "relative",
+              right: "15%",
+            }}
+          >
+            <option value="en">Language</option>
+            <option value="hi">हिंदी</option>
+            <option value="en">English</option>
+          </select>
         </li>
         <li>
-        <Button
+          <Button
             onClick={handleshowofflineAstro}
             size="sm"
             className="ml-1 mt-1 btn btn-success "
@@ -351,7 +377,7 @@ const NavbarUser = () => {
               height: "28px",
             }}
           >
-          {ButtonText && ButtonText}
+            {ButtonText && ButtonText}
           </Button>
         </li>
 

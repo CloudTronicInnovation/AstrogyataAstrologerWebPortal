@@ -15,7 +15,7 @@ class ChatApp extends React.Component {
 
     this.state = {
       selectedUserIndex: 0,
-      setUserInfoFlag: false,
+      setUserInfoFlag: null,
       setTimer: 0,
       timerStartFlag: false,
       callCharge: null,
@@ -143,23 +143,17 @@ class ChatApp extends React.Component {
     this.secondsToTime(30 * 60);
     console.log(this.state.roomChatData);
   }
-  componentDidUpdate() {
-    if (this.state.setUserInfoFlag) {
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.setUserInfoFlag || prevState.setUserInfoFlag) {
       let data = this.state?.roomChatData;
-      const userinfomsg = data[data.length - 1].msg;
-      console.log(userinfomsg);
-      if (userinfomsg.includes("FirstName")) {
-        // if (sessionStorage.getItem('userKundaliInfo')==null) {
-        sessionStorage.setItem(
-          "userKundaliInfo",
-          JSON.stringify(this.extractInfo(data[data.length - 1].msg))
-        );
-        // this.setState({ setUserInfoFlag: false });
-        // }
-        // else{
-        this.setState({ setUserInfoFlag: false });
-      }
-      // }
+      const result = data.findLast((element) =>
+        element.msg.includes("FirstName")
+      );
+      sessionStorage.setItem(
+        "userKundaliInfo",
+        JSON.stringify(this.extractInfo(result.msg))
+      );
+      this.setState({ setUserInfoFlag: false });
     }
   }
   componentWillUnmount() {
@@ -171,11 +165,9 @@ class ChatApp extends React.Component {
     let astroId = localStorage.getItem("astroId");
     let old_msg_id = null;
     const id = setInterval(() => {
-      console.log(this.state.selectedUserIndex);
       axiosConfig
         .get(`/user/astrogetRoomid/${astroId}`)
         .then((response) => {
-          console.log(response.data.data);
           if (response.data.status === true) {
             // this.setState({
             //   userChatList: response?.data?.data,
@@ -184,7 +176,6 @@ class ChatApp extends React.Component {
             //   (item) => item.userid._id === userId
             // );
             const newmessage = response.data.data[this.state.selectedUserIndex];
-            console.log(old_msg_id, newmessage._id);
             if (old_msg_id !== newmessage._id && old_msg_id !== null) {
               this.setState((prevState) => ({
                 roomChatData: [...prevState.roomChatData, newmessage],
@@ -255,7 +246,6 @@ class ChatApp extends React.Component {
     if (seconds === 0) {
       clearInterval(this.timer);
     }
-    console.log(this.state.setTimer);
   }
 
   getChatdata = () => {
@@ -311,7 +301,8 @@ class ChatApp extends React.Component {
             );
           });
           this.setState({ roomChatData: filteredArray });
-          this.setState({ setUserInfoFlag: true });
+          if (!this.state.setUserInfoFlag)
+            this.setState({ setUserInfoFlag: true });
         }
       })
       .catch((error) => {
@@ -363,7 +354,7 @@ class ChatApp extends React.Component {
         this.handleStart();
         setInterval(() => {
           this.handleStart();
-        }, 10000);
+        }, 60000);
         this.setState({ timerStartFlag: true });
       }
     } else {
@@ -377,7 +368,6 @@ class ChatApp extends React.Component {
       };
       console.log(value);
       const id = setInterval(() => {
-        console.log("intervelis running");
         axiosConfig
           .post(`/user/checkroom`, value)
           .then((response) => {
@@ -464,7 +454,6 @@ class ChatApp extends React.Component {
     let userId = localStorage.getItem("CurrentChat_userid");
     let astroId = localStorage.getItem("astroId");
     //  sessionStorage.setItem("typeofcall", "Video");
-    console.log(userId, astroId);
     let payload = {
       userId: userId,
       astroId: astroId,
@@ -474,12 +463,11 @@ class ChatApp extends React.Component {
       .post("/user/timer", payload)
       .then((res) => {
         const value = res.data;
-        console.log("/user/timer", value);
         this.setState({ setTimer: value.timer.currentValue });
         clearInterval(this.countRef.current);
         this.countRef.current = setInterval(() => {
           this.setState({ setTimer: this.state.setTimer + 1 });
-        }, 60000);
+        }, 1000);
       })
       .catch((err) => {});
 
