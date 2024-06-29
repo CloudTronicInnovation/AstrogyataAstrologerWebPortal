@@ -14,6 +14,7 @@ class ChatApp extends React.Component {
     this.countRef = React.createRef();
 
     this.state = {
+      newMsgNotification:0,
       selectedUserIndex: 0,
       setUserInfoFlag: null,
       setTimer: 0,
@@ -61,7 +62,7 @@ class ChatApp extends React.Component {
       astroId: this.state.astroId,
       type: "Chat",
     };
-    console.log(payload);
+  
     await axiosConfig
       .post(`/user/deductChatBalance`, payload)
       .then((res) => {
@@ -165,6 +166,7 @@ class ChatApp extends React.Component {
     let astroId = localStorage.getItem("astroId");
     let old_msg_id = null;
     const id = setInterval(() => {
+      console.log(this.state.r);
       axiosConfig
         .get(`/user/astrogetRoomid/${astroId}`)
         .then((response) => {
@@ -177,6 +179,12 @@ class ChatApp extends React.Component {
             // );
             const newmessage = response.data.data[this.state.selectedUserIndex];
             if (old_msg_id !== newmessage._id && old_msg_id !== null) {
+              if(!this.state.ModdleToggle){
+                this.setState((prevState) => ({
+                  newMsgNotification: prevState.newMsgNotification + 1
+                }));
+              }
+                // this.setState({ newMsgNotification: [...this.state.newMsgNotification, newmessage] });
               this.setState((prevState) => ({
                 roomChatData: [...prevState.roomChatData, newmessage],
               }));
@@ -308,6 +316,11 @@ class ChatApp extends React.Component {
       .catch((error) => {
         console.log(error);
       });
+      // if(this.state.ModdleToggle){
+        this.setState({
+          newMsgNotification: 0
+        });
+      // }
   };
 
   submitHandler = async (e) => {
@@ -556,6 +569,7 @@ class ChatApp extends React.Component {
                               ? this.state.userChatList
                               : []
                           }
+                          newMessage={this.state.newMsgNotification}
                           getChatRoomId={(user, i) => {
                             this.getChatRoomId(user, i);
                             //change userdata to view their kundali

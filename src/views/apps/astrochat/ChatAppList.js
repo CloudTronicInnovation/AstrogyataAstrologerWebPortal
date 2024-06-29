@@ -18,7 +18,7 @@ class ChatAppList extends React.Component {
   }
 
   render() {
-    const { userChatList } = this.props;
+    const { userChatList, newMessage } = this.props;
 
     return (
       <ul
@@ -45,7 +45,7 @@ class ChatAppList extends React.Component {
                     }}
                   >
                     <div
-                      className=" userprofile"
+                      className="userprofile my-auto"
                       onClick={() => this.props.getChatRoomId(user, i)}
                     >
                       <img
@@ -54,10 +54,32 @@ class ChatAppList extends React.Component {
                         alt=""
                       />
                     </div>
-                    <div className="userName mt-1">
-                       <h5>{user?.userid?.fullname}</h5>
-                      <p>{user.msg.slice(0, 15)}...</p> 
+                    <div className="userName mt-1" style={{ width: "55%" }}>
+                      <h5>{user?.userid?.fullname}</h5>
+                      <p>{user.msg.slice(0, 15)}...</p>
                     </div>
+                    {this.props.newMessage === 0 ? null : (
+                      <div
+                        className="userName mt-2"
+                        style={{
+                          width: "45%",
+                          marginRight: "3px",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        <div className="">
+                          <p className="text-center">
+                            <span
+                              className="rounded-circle bg-dark text-white"
+                              style={{ padding: "1px 6px" }}
+                            >
+                              {this.props.newMessage}
+                            </span>
+                          </p>
+                          <p className="text-right fw-bold">new message</p>
+                        </div>
+                      </div>
+                    )}
                   </li>
                 );
               } else {
