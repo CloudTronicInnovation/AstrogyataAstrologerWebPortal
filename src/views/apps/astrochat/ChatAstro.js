@@ -11,11 +11,11 @@ import { FaArrowAltCircleRight } from "react-icons/fa";
 class ChatApp extends React.Component {
   constructor(props) {
     super(props);
-    const savedTime = parseInt(localStorage.getItem('timer'), 10) || 0;
+    const savedTime = parseInt(localStorage.getItem("timer"), 10) || 0;
     this.countRef = React.createRef();
 
     this.state = {
-      newMsgNotification:0,
+      newMsgNotification: 0,
       selectedUserIndex: 0,
       setUserInfoFlag: null,
       setTimer: 0,
@@ -65,7 +65,7 @@ class ChatApp extends React.Component {
       astroId: this.state.astroId,
       type: "Chat",
     };
-  
+
     await axiosConfig
       .post(`/user/deductChatBalance`, payload)
       .then((res) => {
@@ -88,7 +88,6 @@ class ChatApp extends React.Component {
       .then((res) => {
         console.log(res);
         window.location.replace("/");
-        
       })
       .catch((err) => {
         console.log(err.response.data);
@@ -147,9 +146,17 @@ class ChatApp extends React.Component {
     this.setState({ minutes: 30, seconds: 30 * 60 });
     // this.startTimer();
     this.secondsToTime(30 * 60);
-    console.log(this.state.roomChatData);
+    // if (this.props?.location?.state?.toggleMogel) {
+    //   this.getChatRoomId(this.props?.location?.state, 0);
+    // }
   }
   componentDidUpdate(prevProps, prevState) {
+    if(JSON.parse(sessionStorage.getItem("accepteduserinfo"))){
+      const data = JSON.parse(sessionStorage.getItem("accepteduserinfo"))
+      this.getChatRoomId(data, 0);
+      sessionStorage.removeItem("accepteduserinfo");
+    }
+   console.log(JSON.parse(sessionStorage.getItem("accepteduserinfo"))); 
     if (this.state.setUserInfoFlag || prevState.setUserInfoFlag) {
       let data = this.state?.roomChatData;
       const result = data.findLast((element) =>
@@ -185,12 +192,12 @@ class ChatApp extends React.Component {
             // );
             const newmessage = response.data.data[this.state.selectedUserIndex];
             if (old_msg_id !== newmessage._id && old_msg_id !== null) {
-              if(!this.state.ModdleToggle){
+              if (!this.state.ModdleToggle) {
                 this.setState((prevState) => ({
-                  newMsgNotification: prevState.newMsgNotification + 1
+                  newMsgNotification: prevState.newMsgNotification + 1,
                 }));
               }
-                // this.setState({ newMsgNotification: [...this.state.newMsgNotification, newmessage] });
+              // this.setState({ newMsgNotification: [...this.state.newMsgNotification, newmessage] });
               this.setState((prevState) => ({
                 roomChatData: [...prevState.roomChatData, newmessage],
               }));
@@ -248,10 +255,10 @@ class ChatApp extends React.Component {
     this.intervalId = setInterval(() => {
       this.setState((prevState) => {
         const newTime = prevState.timer + 1;
-        localStorage.setItem('timer', newTime);
+        localStorage.setItem("timer", newTime);
         return { timer: newTime };
       });
-    }, 1000)
+    }, 1000);
     if (this.timer === 0 && this.state.seconds > 0) {
       this.timer = setInterval(this.countDown, 1000);
     }
@@ -336,11 +343,11 @@ class ChatApp extends React.Component {
       .catch((error) => {
         console.log(error);
       });
-      // if(this.state.ModdleToggle){
-        this.setState({
-          newMsgNotification: 0
-        });
-      // }
+    // if(this.state.ModdleToggle){
+    this.setState({
+      newMsgNotification: 0,
+    });
+    // }
   };
 
   submitHandler = async (e) => {

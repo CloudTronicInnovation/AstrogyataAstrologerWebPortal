@@ -58,7 +58,7 @@ class ChatAppList extends React.Component {
                       <h5>{user?.userid?.fullname}</h5>
                       <p>{user.msg.slice(0, 15)}...</p>
                     </div>
-                    {this.props.newMessage === 0 ? null : (
+                    {this.props.newMessage > 0 ? (
                       <div
                         className="userName mt-2"
                         style={{
@@ -79,7 +79,7 @@ class ChatAppList extends React.Component {
                           <p className="text-right fw-bold">new message</p>
                         </div>
                       </div>
-                    )}
+                    ) : null}
                   </li>
                 );
               } else {

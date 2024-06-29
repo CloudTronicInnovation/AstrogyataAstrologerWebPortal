@@ -242,6 +242,7 @@ const NavbarUser = () => {
         pathname: "/app/astrochat/chatastro",
         state: { ...data, toggleMogel: true },
       });
+      sessionStorage.setItem("accepteduserinfo",JSON.stringify({...data, toggleMogel:true}));
     }
     if (data?.type === "Call") {
       const userId= data.userid._id
