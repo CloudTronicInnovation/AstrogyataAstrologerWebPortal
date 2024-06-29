@@ -443,7 +443,7 @@ const NavbarUser = () => {
                           Accept
                         </Button>
                         <Button
-                          onClick={() => handleVideoDeleteNotify(data)}
+                          onClick={() => handledelStatus(data)}
                           className="denger media-heading gt-2"
                         >
                           Reject
