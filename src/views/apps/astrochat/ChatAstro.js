@@ -11,6 +11,7 @@ import { FaArrowAltCircleRight } from "react-icons/fa";
 class ChatApp extends React.Component {
   constructor(props) {
     super(props);
+    const savedTime = parseInt(localStorage.getItem('timer'), 10) || 0;
     this.countRef = React.createRef();
 
     this.state = {
@@ -38,7 +39,9 @@ class ChatApp extends React.Component {
       ModdleToggle: false,
       indexValue: 0,
       checkroomflag: true,
+      timer: savedTime,
     };
+    this.intervalId = null;
     this.timer = 0;
     this.startTimer = this.startTimer.bind(this);
     this.countDown = this.countDown.bind(this);
@@ -85,6 +88,7 @@ class ChatApp extends React.Component {
       .then((res) => {
         console.log(res);
         window.location.replace("/");
+        
       })
       .catch((err) => {
         console.log(err.response.data);
@@ -108,6 +112,7 @@ class ChatApp extends React.Component {
     this.setState({ ModdleToggle: false });
   };
   componentDidMount() {
+    // this.startTimer();
     let astroId = localStorage.getItem("astroId");
     let userId = localStorage.getItem("CurrentChat_userid");
 
@@ -158,6 +163,7 @@ class ChatApp extends React.Component {
     }
   }
   componentWillUnmount() {
+    this.startTimer();
     clearInterval(this.state.chatinterval);
     this.setState({ timerStartFlag: false, setUserInfoFlag: false });
     clearInterval(sessionStorage.getItem("intervalforroom"));
@@ -237,11 +243,25 @@ class ChatApp extends React.Component {
   }
 
   startTimer() {
+    if (this.intervalId) return;
+
+    this.intervalId = setInterval(() => {
+      this.setState((prevState) => {
+        const newTime = prevState.timer + 1;
+        localStorage.setItem('timer', newTime);
+        return { timer: newTime };
+      });
+    }, 1000)
     if (this.timer === 0 && this.state.seconds > 0) {
       this.timer = setInterval(this.countDown, 1000);
     }
   }
-
+  stopTimer = () => {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+  };
   countDown() {
     let seconds =
       this.state.seconds !== 0 ? this.state.seconds - 1 : alert("out time");
@@ -730,6 +750,7 @@ class ChatApp extends React.Component {
 
                             <div className="text-success">
                               <p>{this.formatTime(this.state.setTimer)}</p>
+                              {/* <h1>Timer: {this.state.timer} seconds</h1> */}
                             </div>
 
                             <div>
