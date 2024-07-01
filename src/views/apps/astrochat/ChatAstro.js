@@ -122,6 +122,7 @@ class ChatApp extends React.Component {
     axiosConfig
       .get(`/user/astrogetRoomid/${astroId}`)
       .then((response) => {
+        console.log(response);
         if (response.data.status === true) {
           this.setState({
             userChatList: response?.data?.data,
@@ -201,10 +202,13 @@ class ChatApp extends React.Component {
               this.setState((prevState) => ({
                 roomChatData: [...prevState.roomChatData, newmessage],
               }));
-              // if (!this.state.timerStartFlag) {
-              //   this.handleStart();
-              //   this.setState({ timerStartFlag: true });
-              // }
+              if (!this.state.timerStartFlag) {
+                this.handleStart();
+                setInterval(() => {
+                  this.handleStart();
+                }, 20000);
+                this.setState({ timerStartFlag: true });
+              }
             }
 
             old_msg_id = newmessage._id;
@@ -390,13 +394,13 @@ class ChatApp extends React.Component {
           console.log(error);
         });
 
-      if (!this.state.timerStartFlag) {
-        this.handleStart();
-        setInterval(() => {
-          this.handleStart();
-        }, 60000);
-        this.setState({ timerStartFlag: true });
-      }
+      // if (!this.state.timerStartFlag) {
+      //   this.handleStart();
+      //   setInterval(() => {
+      //     this.handleStart();
+      //   }, 20000);
+      //   this.setState({ timerStartFlag: true });
+      // }
     } else {
       this.setState({ tooglebtn: true });
     }
@@ -502,6 +506,7 @@ class ChatApp extends React.Component {
     axiosConfig
       .post("/user/timer", payload)
       .then((res) => {
+        console.log(res);
         const value = res.data;
         this.setState({ setTimer: value.timer.currentValue });
         clearInterval(this.countRef.current);
