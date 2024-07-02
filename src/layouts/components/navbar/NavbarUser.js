@@ -237,18 +237,28 @@ const NavbarUser = () => {
       });
 
     if (data?.type === "Chat") {
-      console.log(data.type);
+      axiosConfig
+        .get(`/admin/intekListByUser/${data?.userid?._id}`)
+        .then((res) => {
+           const intakeinfo = res.data?.data.filter((item) => item._id === data?.userintakeid);
+           sessionStorage.setItem(
+            "accepteduserinfo",
+            JSON.stringify({ ...intakeinfo[0], toggleMogel: true })
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       history.push({
         pathname: "/app/astrochat/chatastro",
         state: { ...data, toggleMogel: true },
       });
-      sessionStorage.setItem("accepteduserinfo",JSON.stringify({...data, toggleMogel:true}));
     }
     if (data?.type === "Call") {
-      const userId= data.userid._id
-      const astroid= data.astroid._id
-      const tono= data.userid.mobile
-      const fromno= data.astroid.mobile
+      const userId = data.userid._id;
+      const astroid = data.astroid._id;
+      const tono = data.userid.mobile;
+      const fromno = data.astroid.mobile;
 
       let obj = {
         userid: userId,
@@ -259,8 +269,7 @@ const NavbarUser = () => {
       };
 
       axiosConfig
-        .post(`/user/make_call`, obj, {
-        })
+        .post(`/user/make_call`, obj, {})
         .then((response) => {
           swal("Call Connecting", "SuccessFully");
         })

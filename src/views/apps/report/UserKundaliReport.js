@@ -43,18 +43,20 @@ const UserKundaliReport = (props) => {
 
   const fetchPanchangDetails = () => {
     const { day, month, year } = getDayMonthYear(
-      props.location?.state?.userKundaliData.dateOfBirth
+      props.location?.state?.userKundaliData.dob
     );
+    const birthData = JSON.parse(props.location?.state?.userKundaliData?.birthPlace);
+
     const reqPanchangData = {
       day: day,
       month: month,
       year: year,
-      hour: props.location?.state?.userKundaliData?.timeOfBirth?.split(":")[0],
-      min: props.location?.state?.userKundaliData?.timeOfBirth?.split(":")[1],
+      hour: props.location?.state?.userKundaliData?.date_of_time?.split(":")[0],
+      min: props.location?.state?.userKundaliData?.date_of_time?.split(":")[1],
       // hour:2,min:4,
-      // min: props.location?.state?.userKundaliData?.dateOfBirth?.split(".")[1],
-      lat: props.location?.state?.userKundaliData?.birthPlace?.latitude,
-      lon: props.location?.state?.userKundaliData?.birthPlace?.longitude,
+      // min: props.location?.state?.userKundaliData?.dob?.split(".")[1],
+      lat: birthData?.latitude,
+      lon: birthData?.longitude,
       // lat: "11.66613000",
       // lon: "92.74635000",
       tzone: "5.5", // default timezone
@@ -326,11 +328,11 @@ const UserKundaliReport = (props) => {
                         </tr>
                         <tr>
                           <th>Name</th>
-                          <td>{basicDetails?.firstName}</td>
+                          <td>{basicDetails?.firstname}</td>
                         </tr>
                         <tr>
                           <th>Birth Date</th>
-                          <td>{basicDetails?.dateOfBirth}</td>
+                          <td>{basicDetails?.dob}</td>
                         </tr>
                         <tr>
                           <th>Birth Time</th>
@@ -339,7 +341,7 @@ const UserKundaliReport = (props) => {
                               basicDetails?.birth_tym?.split(".")[0],
                               basicDetails?.birth_tym?.split(".")[1]
                             )} */}
-                            {basicDetails?.timeOfBirth}
+                            {basicDetails?.date_of_time}
                           </td>
                         </tr>
                         <tr>

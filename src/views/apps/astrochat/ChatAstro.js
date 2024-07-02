@@ -50,7 +50,7 @@ class ChatApp extends React.Component {
     this.props.history.push({
       pathname: "/app/report/kundalireport",
       state: {
-        userKundaliData: JSON.parse(sessionStorage.getItem("userKundaliInfo")),
+        userKundaliData: JSON.parse(localStorage.getItem("userKundaliInfo")),
       },
     });
   };
@@ -152,24 +152,29 @@ class ChatApp extends React.Component {
     // }
   }
   componentDidUpdate(prevProps, prevState) {
-    if(JSON.parse(sessionStorage.getItem("accepteduserinfo"))){
-      const data = JSON.parse(sessionStorage.getItem("accepteduserinfo"))
+    if (sessionStorage.getItem("accepteduserinfo")) {
+      const data = JSON.parse(sessionStorage.getItem("accepteduserinfo"));
       this.getChatRoomId(data, 0);
       sessionStorage.removeItem("accepteduserinfo");
-    }
-   console.log(JSON.parse(sessionStorage.getItem("accepteduserinfo"))); 
-    if (this.state.setUserInfoFlag || prevState.setUserInfoFlag) {
-      let data = this.state?.roomChatData;
-      const result = data.findLast((element) =>
-        element.msg.includes("FirstName")
-      );
-      sessionStorage.setItem(
+      localStorage.setItem(
         "userKundaliInfo",
-        JSON.stringify(this.extractInfo(result.msg))
+        JSON.stringify(data)
       );
-      this.setState({ setUserInfoFlag: false });
     }
+    console.log(JSON.parse(sessionStorage.getItem("accepteduserinfo")));
+    // if (this.state.setUserInfoFlag || prevState.setUserInfoFlag) {
+    //   let data = this.state?.roomChatData;
+    //   const result = data.findLast((element) =>
+    //     element.msg.includes("FirstName")
+    //   );
+    //   // sessionStorage.setItem(
+    //   //   "userKundaliInfo",
+    //   //   // JSON.stringify(this.extractInfo(result.msg))
+    //   // );
+    //   this.setState({ setUserInfoFlag: false });
+    // }
   }
+
   componentWillUnmount() {
     this.startTimer();
     clearInterval(this.state.chatinterval);
