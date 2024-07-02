@@ -153,7 +153,7 @@ class ChatApp extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (sessionStorage.getItem("accepteduserinfo")) {
       const data = JSON.parse(sessionStorage.getItem("accepteduserinfo"));
-      this.getChatRoomId(data, 0);
+      // this.getChatRoomId(data, 0);
       sessionStorage.removeItem("accepteduserinfo");
     }
     console.log(JSON.parse(sessionStorage.getItem("accepteduserinfo")));
@@ -180,7 +180,6 @@ class ChatApp extends React.Component {
     let astroId = localStorage.getItem("astroId");
     let old_msg_id = null;
     const id = setInterval(() => {
-      console.log(this.state.r);
       axiosConfig
         .get(`/user/astrogetRoomid/${astroId}`)
         .then((response) => {
