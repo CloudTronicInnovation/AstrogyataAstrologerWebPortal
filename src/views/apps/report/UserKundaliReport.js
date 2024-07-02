@@ -36,23 +36,24 @@ const UserKundaliReport = (props) => {
   const [saturnAshvarga, setSaturnAshvarga] = useState(null);
 
   useEffect(() => {
-    if (props.location?.state?.userKundaliData) fetchPanchangDetails();
-    setBasicDetails(props.location?.state?.userKundaliData);
-    console.log(props.location?.state?.userKundaliData);
+    if (localStorage.getItem("userKundaliInfo")) fetchPanchangDetails();
+    setBasicDetails(JSON.parse(localStorage.getItem("userKundaliInfo")));
+    console.log(JSON.parse(localStorage.getItem("userKundaliInfo")));
   }, []);
 
   const fetchPanchangDetails = () => {
+    const kinfo = JSON.parse(localStorage.getItem("userKundaliInfo"));
     const { day, month, year } = getDayMonthYear(
-      props.location?.state?.userKundaliData.dob
+      kinfo.dob
     );
-    const birthData = JSON.parse(props.location?.state?.userKundaliData?.birthPlace);
+    const birthData = JSON.parse(kinfo?.birthPlace);
 
     const reqPanchangData = {
       day: day,
       month: month,
       year: year,
-      hour: props.location?.state?.userKundaliData?.date_of_time?.split(":")[0],
-      min: props.location?.state?.userKundaliData?.date_of_time?.split(":")[1],
+      hour: kinfo?.date_of_time?.split(":")[0],
+      min: kinfo?.date_of_time?.split(":")[1],
       // hour:2,min:4,
       // min: props.location?.state?.userKundaliData?.dob?.split(".")[1],
       lat: birthData?.latitude,
@@ -347,6 +348,7 @@ const UserKundaliReport = (props) => {
                         <tr>
                           <th>Birth Place</th>
                           <td>
+                            {/* 
                             {basicDetails.birthPlace != null ? (
                               <p>
                                 <span>
@@ -367,7 +369,7 @@ const UserKundaliReport = (props) => {
                               </p>
                             ) : (
                               ""
-                            )}
+                            )} */}
                           </td>
                         </tr>
                         {/* <tr>

@@ -49,9 +49,9 @@ class ChatApp extends React.Component {
   handleKundaly = () => {
     this.props.history.push({
       pathname: "/app/report/kundalireport",
-      state: {
-        userKundaliData: JSON.parse(localStorage.getItem("userKundaliInfo")),
-      },
+      // state: {
+      //   userKundaliData: JSON.parse(localStorage.getItem("userKundaliInfo")),
+      // },
     });
   };
 
@@ -122,7 +122,6 @@ class ChatApp extends React.Component {
     axiosConfig
       .get(`/user/astrogetRoomid/${astroId}`)
       .then((response) => {
-        console.log(response);
         if (response.data.status === true) {
           this.setState({
             userChatList: response?.data?.data,
@@ -156,10 +155,6 @@ class ChatApp extends React.Component {
       const data = JSON.parse(sessionStorage.getItem("accepteduserinfo"));
       this.getChatRoomId(data, 0);
       sessionStorage.removeItem("accepteduserinfo");
-      localStorage.setItem(
-        "userKundaliInfo",
-        JSON.stringify(data)
-      );
     }
     console.log(JSON.parse(sessionStorage.getItem("accepteduserinfo")));
     // if (this.state.setUserInfoFlag || prevState.setUserInfoFlag) {
@@ -207,13 +202,10 @@ class ChatApp extends React.Component {
               this.setState((prevState) => ({
                 roomChatData: [...prevState.roomChatData, newmessage],
               }));
-              if (!this.state.timerStartFlag) {
-                this.handleStart();
-                setInterval(() => {
-                  this.handleStart();
-                }, 20000);
-                this.setState({ timerStartFlag: true });
-              }
+              // if (!this.state.timerStartFlag) {
+              //   this.handleStart();
+              //   this.setState({ timerStartFlag: true });
+              // }
             }
 
             old_msg_id = newmessage._id;
@@ -403,7 +395,7 @@ class ChatApp extends React.Component {
       //   this.handleStart();
       //   setInterval(() => {
       //     this.handleStart();
-      //   }, 20000);
+      //   }, 60000);
       //   this.setState({ timerStartFlag: true });
       // }
     } else {
@@ -511,7 +503,6 @@ class ChatApp extends React.Component {
     axiosConfig
       .post("/user/timer", payload)
       .then((res) => {
-        console.log(res);
         const value = res.data;
         this.setState({ setTimer: value.timer.currentValue });
         clearInterval(this.countRef.current);
@@ -543,36 +534,36 @@ class ChatApp extends React.Component {
         console.log(error);
       });
   };
-  extractInfo(str) {
-    const info = {};
+  // extractInfo(str) {
+  //   const info = {};
 
-    // Extract first name
-    const firstNameMatch = str.match(/FirstName: ([^<]+)<br>/);
-    info.firstName = firstNameMatch ? firstNameMatch[1] : null;
+  //   // Extract first name
+  //   const firstNameMatch = str.match(/FirstName: ([^<]+)<br>/);
+  //   info.firstName = firstNameMatch ? firstNameMatch[1] : null;
 
-    // Extract birthplace details
-    // const birthPlaceMatch = str.match(/BirthPlace: ({[^<]+})<br>/);
-    // if (birthPlaceMatch) {
-    //   info.birthPlace = JSON.parse(birthPlaceMatch[1]);
-    // }
+  //   // Extract birthplace details
+  //   // const birthPlaceMatch = str.match(/BirthPlace: ({[^<]+})<br>/);
+  //   // if (birthPlaceMatch) {
+  //   //   info.birthPlace = JSON.parse(birthPlaceMatch[1]);
+  //   // }
 
-    // Extract time of birth
-    const timeOfBirthMatch = str.match(/Date Of Time: ([^<]+)<br>/);
-    info.timeOfBirth = timeOfBirthMatch ? timeOfBirthMatch[1] : null;
+  //   // Extract time of birth
+  //   const timeOfBirthMatch = str.match(/Date Of Time: ([^<]+)<br>/);
+  //   info.timeOfBirth = timeOfBirthMatch ? timeOfBirthMatch[1] : null;
 
-    // Extract date of birth
-    const dateOfBirthMatch = str.match(/Date Of Birth: ([^<]+)<br>/);
-    info.dateOfBirth = dateOfBirthMatch ? dateOfBirthMatch[1] : null;
+  //   // Extract date of birth
+  //   const dateOfBirthMatch = str.match(/Date Of Birth: ([^<]+)<br>/);
+  //   info.dateOfBirth = dateOfBirthMatch ? dateOfBirthMatch[1] : null;
 
-    // Extract gender
-    const genderMatch = str.match(/Gender: ([^<]+)<br>/);
-    info.gender = genderMatch ? genderMatch[1] : null;
+  //   // Extract gender
+  //   const genderMatch = str.match(/Gender: ([^<]+)<br>/);
+  //   info.gender = genderMatch ? genderMatch[1] : null;
 
-    const placeinfo = str.match(/<!--PlaceInfo:\s*(\{[^>]+\})-->/);
-    info.birthPlace = placeinfo ? JSON.parse(placeinfo[1]) : null;
+  //   const placeinfo = str.match(/<!--PlaceInfo:\s*(\{[^>]+\})-->/);
+  //   info.birthPlace = placeinfo ? JSON.parse(placeinfo[1]) : null;
 
-    return info;
-  }
+  //   return info;
+  // }
 
   render() {
     const { indexValue, showOldChats } = this.state;

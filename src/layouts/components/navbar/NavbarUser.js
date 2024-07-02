@@ -240,11 +240,14 @@ const NavbarUser = () => {
       axiosConfig
         .get(`/admin/intekListByUser/${data?.userid?._id}`)
         .then((res) => {
-           const intakeinfo = res.data?.data.filter((item) => item._id === data?.userintakeid);
-           sessionStorage.setItem(
+          sessionStorage.setItem(
             "accepteduserinfo",
-            JSON.stringify({ ...intakeinfo[0], toggleMogel: true })
+            JSON.stringify({ ...data, toggleMogel: true })
           );
+          const intakeinfo = res.data?.data.filter(
+            (item) => item._id === data?.userintakeid
+          );
+          localStorage.setItem("userKundaliInfo", JSON.stringify(intakeinfo[0]));
         })
         .catch((err) => {
           console.log(err);
