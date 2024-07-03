@@ -284,8 +284,8 @@ const NavbarUser = () => {
     if (data?.type === "Call") {
       const userId = data.userid._id;
       const astroid = data.astroid._id;
-      const tono = data.userid.mobile;
-      const fromno = data.astroid.mobile;
+      const tono = data.astroid.mobile;
+      const fromno = data.userid.mobile;
 
       let obj = {
         userid: userId,
