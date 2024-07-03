@@ -37,30 +37,27 @@ const UserKundaliReport = (props) => {
   const [saturnAshvarga, setSaturnAshvarga] = useState(null);
 
   useEffect(() => {
-    if (props.location?.state?.userKundaliData) fetchPanchangDetails();
-    setBasicDetails(props.location?.state?.userKundaliData);
-    console.log(props.location?.state?.userKundaliData);
+    if (localStorage.getItem("userKundaliInfo")) fetchPanchangDetails();
+    setBasicDetails(JSON.parse(localStorage.getItem("userKundaliInfo")));
+    console.log(JSON.parse(localStorage.getItem("userKundaliInfo")));
   }, []);
 
   const fetchPanchangDetails = () => {
-    const { day, month, year } = getDayMonthYear(
-      props.location?.state?.userKundaliData.dob
+    const { dob, date_of_time, userLatLong } = JSON.parse(
+      localStorage.getItem("userKundaliInfo")
     );
-    const birthlocation = JSON.parse(
-      props.location?.state?.userKundaliData?.birthPlace
-    );
-    setBirthLocation(birthlocation);
+    const { day, month, year } = getDayMonthYear(dob);
 
     const reqPanchangData = {
       day: day,
       month: month,
       year: year,
-      hour: props.location?.state?.userKundaliData?.date_of_time?.split(":")[0],
-      min: props.location?.state?.userKundaliData?.date_of_time?.split(":")[1],
+      hour: date_of_time?.split(":")[0],
+      min: date_of_time?.split(":")[1],
       // hour:2,min:4,
-      // min: props.location?.state?.userKundaliData?.dateOfBirth?.split(".")[1],
-      lat: birthlocation.latitude,
-      lon: birthlocation.longitude,
+      // min: JSON.parse(localStorage.getItem("userKundaliInfo"))?.dateOfBirth?.split(".")[1],
+      lat: userLatLong?.latitude,
+      lon: userLatLong?.longitude,
       // lat: "11.66613000",
       // lon: "92.74635000",
       tzone: "5.5", // default timezone
@@ -349,7 +346,10 @@ const UserKundaliReport = (props) => {
                         </tr>
                         <tr>
                           <th>Birth Place</th>
-                          <td>{birthLocation && birthLocation?.name}</td>
+                          <td>
+                            {basicDetails &&
+                              basicDetails?.birthPlace}
+                          </td>
                         </tr>
                         {/* <tr>
                     <th>Latitude</th>
@@ -591,9 +591,6 @@ const UserKundaliReport = (props) => {
                 <Nodatafound />
               ) : (
                 <Row>
-                  <h1 className="mb-3">
-                    Vimshottari Dasha [2 Year(s) 11 Month(s) 1 Day(s)]
-                  </h1>
                   {Object.keys(vimshottariData).map((x, index) => (
                     <>
                       <Col md="4" sm="12" className="kundlitable" key={index}>
@@ -631,7 +628,6 @@ const UserKundaliReport = (props) => {
                 <Nodatafound />
               ) : (
                 <Row>
-                  <h1 className="mb-3">Yogini Dasha</h1>
                   {yoginiDashaData.map((item, key) => (
                     <>
                       <Col md="4" sm="12" className="kundlitable" key={key}>

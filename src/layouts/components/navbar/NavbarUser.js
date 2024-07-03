@@ -264,7 +264,7 @@ const NavbarUser = () => {
                   ...kundaliinfo,
                   userLatLong: res.data?.data?.geonames[0],
                 };
-                console.log(res.data?.data?.geonames[0]);
+                
                 localStorage.setItem(
                   "userKundaliInfo",
                   JSON.stringify(kundaliinfo)

@@ -48,10 +48,7 @@ class ChatApp extends PureComponent {
   }
   handleKundaly = () => {
     this.props.history.push({
-      pathname: "/app/report/kundalireport",
-      state: {
-        userKundaliData: JSON.parse(localStorage.getItem("userKundaliInfo")),
-      },
+      pathname: "/app/report/kundalireport"
     });
   };
 
@@ -154,7 +151,7 @@ class ChatApp extends PureComponent {
   componentDidUpdate(prevProps, prevState) {
     let astroId = localStorage.getItem("astroId");
     let userId = localStorage.getItem("CurrentChat_userid");
- 
+
     // if (JSON.parse(sessionStorage.getItem("accepteduserinfo"))) {
     //   const data = JSON.parse(sessionStorage.getItem("accepteduserinfo"));
     //   // this.getChatRoomId(data, 0);
@@ -172,7 +169,7 @@ class ChatApp extends PureComponent {
     //   );
     //   this.setState({ setUserInfoFlag: false });
     // }
-    
+
     if (!this.state.timerStartFlag) {
       console.log("in start timmer...");
       let value = {
@@ -206,7 +203,10 @@ class ChatApp extends PureComponent {
 
                     Swal.fire({
                       title: "User Left",
-                      html: ` <br>User Name: ${fullName}<br>Chat Duration:${h}:h ${m} :m ${s}s <br>Chat Earning:  Rs. ${this.state.callCharge * Math.ceil(this.state.setTimer / 60)}`,
+                      html: ` <br>User Name: ${fullName}<br>Chat Duration:${h}:h ${m} :m ${s}s <br>Chat Earning:  Rs. ${
+                        this.state.callCharge *
+                        Math.ceil(this.state.setTimer / 60)
+                      }`,
                       width: "300px",
                       timer: 2000,
                     });
