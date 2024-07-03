@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PureComponent } from "react";
 import { Button, Col, Container, Row } from "reactstrap";
 import "../../../assets/scss/pages/astrochat.scss";
 import Buyimg from "../../../assets/img/boy-img.png";
@@ -8,7 +8,7 @@ import axiosConfig from "../../../axiosConfig";
 import Swal from "sweetalert2";
 import { FaArrowAltCircleRight } from "react-icons/fa";
 
-class ChatApp extends React.Component {
+class ChatApp extends PureComponent {
   constructor(props) {
     super(props);
     const savedTime = parseInt(localStorage.getItem("timer"), 10) || 0;
@@ -49,9 +49,9 @@ class ChatApp extends React.Component {
   handleKundaly = () => {
     this.props.history.push({
       pathname: "/app/report/kundalireport",
-      // state: {
-      //   userKundaliData: JSON.parse(localStorage.getItem("userKundaliInfo")),
-      // },
+      state: {
+        userKundaliData: JSON.parse(sessionStorage.getItem("userKundaliInfo")),
+      },
     });
   };
 
@@ -122,6 +122,7 @@ class ChatApp extends React.Component {
     axiosConfig
       .get(`/user/astrogetRoomid/${astroId}`)
       .then((response) => {
+        console.log(response);
         if (response.data.status === true) {
           this.setState({
             userChatList: response?.data?.data,
@@ -151,25 +152,83 @@ class ChatApp extends React.Component {
     // }
   }
   componentDidUpdate(prevProps, prevState) {
-    if (sessionStorage.getItem("accepteduserinfo")) {
+    let astroId = localStorage.getItem("astroId");
+    let userId = localStorage.getItem("CurrentChat_userid");
+
+    if (JSON.parse(sessionStorage.getItem("accepteduserinfo"))) {
       const data = JSON.parse(sessionStorage.getItem("accepteduserinfo"));
       // this.getChatRoomId(data, 0);
       sessionStorage.removeItem("accepteduserinfo");
     }
     console.log(JSON.parse(sessionStorage.getItem("accepteduserinfo")));
-    // if (this.state.setUserInfoFlag || prevState.setUserInfoFlag) {
-    //   let data = this.state?.roomChatData;
-    //   const result = data.findLast((element) =>
-    //     element.msg.includes("FirstName")
-    //   );
-    //   // sessionStorage.setItem(
-    //   //   "userKundaliInfo",
-    //   //   // JSON.stringify(this.extractInfo(result.msg))
-    //   // );
-    //   this.setState({ setUserInfoFlag: false });
-    // }
-  }
+    if (this.state.setUserInfoFlag || prevState.setUserInfoFlag) {
+      let data = this.state?.roomChatData;
+      const result = data.findLast((element) =>
+        element.msg.includes("FirstName")
+      );
+      sessionStorage.setItem(
+        "userKundaliInfo",
+        JSON.stringify(this.extractInfo(result.msg))
+      );
+      this.setState({ setUserInfoFlag: false });
+    }
+    if (!this.state.timerStartFlag) {
+      console.log("in start timmer...");
+      let value = {
+        astroId: astroId,
+        userId: userId,
+      };
+      axiosConfig
+        .post(`/user/checkroom`, value)
+        .then((response) => {
+          if (response.data.roomstatus === 1) {
+            console.log("interval starting");
+            setTimeout(() => {
+              this.handleStart();
+            }, 1000);
+            clearInterval(sessionStorage.getItem("startchatinterId"));
+            const startchatinterId = setInterval(() => {
+              this.handleStart();
+            }, 50000);
+            sessionStorage.setItem("startchatinterId", startchatinterId);
+            this.setState({ timerStartFlag: true });
+            clearInterval(sessionStorage.getItem("intervalforroom"));
+            const id = setInterval(() => {
+              axiosConfig
+                .post(`/user/checkroom`, value)
+                .then((response) => {
+                  if (response.data.roomstatus === 0) {
+                    const fullName =
+                      this.state.userChatList[this.state.indexValue]?.userid
+                        ?.fullname;
+                    const { h, m, s } = this.secondsToTime(this.state.setTimer);
 
+                    Swal.fire({
+                      title: "User Left",
+                      html: ` <br>User Name: ${fullName}<br>Chat Duration:${h}:h ${m} :m ${s}s <br>Chat Earning:  Rs. ${this.state.callCharge * Math.ceil(this.state.setTimer / 60)}`,
+                      width: "300px",
+                      timer: 2000,
+                    });
+                    setTimeout(() => {
+                      window.location.href = "/";
+                    }, 3000);
+                  }
+                })
+                .catch((error) => {
+                  console.log(error);
+                  window.location.href = "/";
+                  clearInterval(id);
+                });
+            }, 3000);
+
+            sessionStorage.setItem("intervalforroom", id);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
   componentWillUnmount() {
     this.startTimer();
     clearInterval(this.state.chatinterval);
@@ -180,6 +239,7 @@ class ChatApp extends React.Component {
     let astroId = localStorage.getItem("astroId");
     let old_msg_id = null;
     const id = setInterval(() => {
+      console.log(this.state.r);
       axiosConfig
         .get(`/user/astrogetRoomid/${astroId}`)
         .then((response) => {
@@ -202,7 +262,12 @@ class ChatApp extends React.Component {
                 roomChatData: [...prevState.roomChatData, newmessage],
               }));
               // if (!this.state.timerStartFlag) {
-              //   this.handleStart();
+              //   setTimeout(() => {
+              //     this.handleStart();
+              //   }, 1000);
+              //   setInterval(() => {
+              //     this.handleStart();
+              //   }, 20000);
               //   this.setState({ timerStartFlag: true });
               // }
             }
@@ -394,44 +459,44 @@ class ChatApp extends React.Component {
       //   this.handleStart();
       //   setInterval(() => {
       //     this.handleStart();
-      //   }, 60000);
+      //   }, 20000);
       //   this.setState({ timerStartFlag: true });
       // }
     } else {
       this.setState({ tooglebtn: true });
     }
 
-    if (this.state.checkroomflag) {
-      let value = {
-        astroId: astroId,
-        userId: userId,
-      };
-      console.log(value);
-      const id = setInterval(() => {
-        axiosConfig
-          .post(`/user/checkroom`, value)
-          .then((response) => {
-            if (response.data.roomstatus === 0) {
-              Swal.fire({
-                title: "User Left",
-                width: "300px",
-                timer: 2000,
-              });
-              setTimeout(() => {
-                window.location.href = "/";
-              }, 1000);
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-            window.location.href = "/";
-            clearInterval(id);
-          });
-      }, 3000);
+    // if (this.state.checkroomflag) {
+    //   let value = {
+    //     astroId: astroId,
+    //     userId: userId,
+    //   };
+    //   console.log(value);
+    //   const id = setInterval(() => {
+    //     axiosConfig
+    //       .post(`/user/checkroom`, value)
+    //       .then((response) => {
+    //         if (response.data.roomstatus === 0) {
+    //           Swal.fire({
+    //             title: "User Left",
+    //             width: "300px",
+    //             timer: 2000,
+    //           });
+    //           setTimeout(() => {
+    //             window.location.href = "/";
+    //           }, 1000);
+    //         }
+    //       })
+    //       .catch((error) => {
+    //         console.log(error);
+    //         window.location.href = "/";
+    //         clearInterval(id);
+    //       });
+    //   }, 3000);
 
-      sessionStorage.setItem("intervalforroom", id);
-      this.serState({ checkroomflag: false });
-    }
+    //   sessionStorage.setItem("intervalforroom", id);
+    //   this.serState({ checkroomflag: false });
+    // }
   };
 
   handleChange = (e) => {
@@ -502,6 +567,7 @@ class ChatApp extends React.Component {
     axiosConfig
       .post("/user/timer", payload)
       .then((res) => {
+        console.log(res);
         const value = res.data;
         this.setState({ setTimer: value.timer.currentValue });
         clearInterval(this.countRef.current);
@@ -533,36 +599,36 @@ class ChatApp extends React.Component {
         console.log(error);
       });
   };
-  // extractInfo(str) {
-  //   const info = {};
+  extractInfo(str) {
+    const info = {};
 
-  //   // Extract first name
-  //   const firstNameMatch = str.match(/FirstName: ([^<]+)<br>/);
-  //   info.firstName = firstNameMatch ? firstNameMatch[1] : null;
+    // Extract first name
+    const firstNameMatch = str.match(/FirstName: ([^<]+)<br>/);
+    info.firstName = firstNameMatch ? firstNameMatch[1] : null;
 
-  //   // Extract birthplace details
-  //   // const birthPlaceMatch = str.match(/BirthPlace: ({[^<]+})<br>/);
-  //   // if (birthPlaceMatch) {
-  //   //   info.birthPlace = JSON.parse(birthPlaceMatch[1]);
-  //   // }
+    // Extract birthplace details
+    // const birthPlaceMatch = str.match(/BirthPlace: ({[^<]+})<br>/);
+    // if (birthPlaceMatch) {
+    //   info.birthPlace = JSON.parse(birthPlaceMatch[1]);
+    // }
 
-  //   // Extract time of birth
-  //   const timeOfBirthMatch = str.match(/Date Of Time: ([^<]+)<br>/);
-  //   info.timeOfBirth = timeOfBirthMatch ? timeOfBirthMatch[1] : null;
+    // Extract time of birth
+    const timeOfBirthMatch = str.match(/Date Of Time: ([^<]+)<br>/);
+    info.timeOfBirth = timeOfBirthMatch ? timeOfBirthMatch[1] : null;
 
-  //   // Extract date of birth
-  //   const dateOfBirthMatch = str.match(/Date Of Birth: ([^<]+)<br>/);
-  //   info.dateOfBirth = dateOfBirthMatch ? dateOfBirthMatch[1] : null;
+    // Extract date of birth
+    const dateOfBirthMatch = str.match(/Date Of Birth: ([^<]+)<br>/);
+    info.dateOfBirth = dateOfBirthMatch ? dateOfBirthMatch[1] : null;
 
-  //   // Extract gender
-  //   const genderMatch = str.match(/Gender: ([^<]+)<br>/);
-  //   info.gender = genderMatch ? genderMatch[1] : null;
+    // Extract gender
+    const genderMatch = str.match(/Gender: ([^<]+)<br>/);
+    info.gender = genderMatch ? genderMatch[1] : null;
 
-  //   const placeinfo = str.match(/<!--PlaceInfo:\s*(\{[^>]+\})-->/);
-  //   info.birthPlace = placeinfo ? JSON.parse(placeinfo[1]) : null;
+    const placeinfo = str.match(/<!--PlaceInfo:\s*(\{[^>]+\})-->/);
+    info.birthPlace = placeinfo ? JSON.parse(placeinfo[1]) : null;
 
-  //   return info;
-  // }
+    return info;
+  }
 
   render() {
     const { indexValue, showOldChats } = this.state;

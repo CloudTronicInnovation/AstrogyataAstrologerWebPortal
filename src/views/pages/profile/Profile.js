@@ -127,6 +127,9 @@ class Profile extends React.Component {
         });
         console.log(response);
         swal("Success!", "Your details updated successfully!", "success");
+        setTimeout(() => {
+          window.location.href = "/";
+        },1000);
       })
 
       .catch((error) => {

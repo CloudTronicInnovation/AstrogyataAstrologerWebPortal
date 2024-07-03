@@ -65,7 +65,6 @@ const NavbarUser = () => {
     await axiosConfig
       .get(`/user/wait_queue_list/${astroId}`)
       .then((res) => {
-        console.log(res);
         setAstronotification(res.data.data);
         setViewnotify(res.data.count);
       })
@@ -237,31 +236,18 @@ const NavbarUser = () => {
       });
 
     if (data?.type === "Chat") {
-      axiosConfig
-        .get(`/admin/intekListByUser/${data?.userid?._id}`)
-        .then((res) => {
-          sessionStorage.setItem(
-            "accepteduserinfo",
-            JSON.stringify({ ...data, toggleMogel: true })
-          );
-          const intakeinfo = res.data?.data.filter(
-            (item) => item._id === data?.userintakeid
-          );
-          localStorage.setItem("userKundaliInfo", JSON.stringify(intakeinfo[0]));
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      console.log(data.type);
       history.push({
         pathname: "/app/astrochat/chatastro",
         state: { ...data, toggleMogel: true },
       });
+      sessionStorage.setItem("accepteduserinfo",JSON.stringify({...data, toggleMogel:true}));
     }
     if (data?.type === "Call") {
-      const userId = data.userid._id;
-      const astroid = data.astroid._id;
-      const tono = data.userid.mobile;
-      const fromno = data.astroid.mobile;
+      const userId= data.userid._id
+      const astroid= data.astroid._id
+      const tono= data.userid.mobile
+      const fromno= data.astroid.mobile
 
       let obj = {
         userid: userId,
@@ -272,7 +258,8 @@ const NavbarUser = () => {
       };
 
       axiosConfig
-        .post(`/user/make_call`, obj, {})
+        .post(`/user/make_call`, obj, {
+        })
         .then((response) => {
           swal("Call Connecting", "SuccessFully");
         })
@@ -285,7 +272,7 @@ const NavbarUser = () => {
     if (data?.type === "Video" && data.videoLink) {
       window.open(`#/app/call/VideoCall/${data?.videoLink}`, data.videoLink);
     } else {
-      swal("Wait For confirmation with second notify");
+      // swal("Wait For confirmation with second notify");
     }
   };
   const handleVideoStatus = (data) => {

@@ -36,28 +36,25 @@ const UserKundaliReport = (props) => {
   const [saturnAshvarga, setSaturnAshvarga] = useState(null);
 
   useEffect(() => {
-    if (localStorage.getItem("userKundaliInfo")) fetchPanchangDetails();
-    setBasicDetails(JSON.parse(localStorage.getItem("userKundaliInfo")));
-    console.log(JSON.parse(localStorage.getItem("userKundaliInfo")));
+    if (props.location?.state?.userKundaliData) fetchPanchangDetails();
+    setBasicDetails(props.location?.state?.userKundaliData);
+    console.log(props.location?.state?.userKundaliData);
   }, []);
 
   const fetchPanchangDetails = () => {
-    const kinfo = JSON.parse(localStorage.getItem("userKundaliInfo"));
     const { day, month, year } = getDayMonthYear(
-      kinfo.dob
+      props.location?.state?.userKundaliData.dateOfBirth
     );
-    const birthData = JSON.parse(kinfo?.birthPlace);
-
     const reqPanchangData = {
       day: day,
       month: month,
       year: year,
-      hour: kinfo?.date_of_time?.split(":")[0],
-      min: kinfo?.date_of_time?.split(":")[1],
+      hour: props.location?.state?.userKundaliData?.timeOfBirth?.split(":")[0],
+      min: props.location?.state?.userKundaliData?.timeOfBirth?.split(":")[1],
       // hour:2,min:4,
-      // min: props.location?.state?.userKundaliData?.dob?.split(".")[1],
-      lat: birthData?.latitude,
-      lon: birthData?.longitude,
+      // min: props.location?.state?.userKundaliData?.dateOfBirth?.split(".")[1],
+      lat: props.location?.state?.userKundaliData?.birthPlace?.latitude,
+      lon: props.location?.state?.userKundaliData?.birthPlace?.longitude,
       // lat: "11.66613000",
       // lon: "92.74635000",
       tzone: "5.5", // default timezone
@@ -329,11 +326,11 @@ const UserKundaliReport = (props) => {
                         </tr>
                         <tr>
                           <th>Name</th>
-                          <td>{basicDetails?.firstname}</td>
+                          <td>{basicDetails?.firstName}</td>
                         </tr>
                         <tr>
                           <th>Birth Date</th>
-                          <td>{basicDetails?.dob}</td>
+                          <td>{basicDetails?.dateOfBirth}</td>
                         </tr>
                         <tr>
                           <th>Birth Time</th>
@@ -342,13 +339,12 @@ const UserKundaliReport = (props) => {
                               basicDetails?.birth_tym?.split(".")[0],
                               basicDetails?.birth_tym?.split(".")[1]
                             )} */}
-                            {basicDetails?.date_of_time}
+                            {basicDetails?.timeOfBirth}
                           </td>
                         </tr>
                         <tr>
                           <th>Birth Place</th>
                           <td>
-                            {/* 
                             {basicDetails.birthPlace != null ? (
                               <p>
                                 <span>
@@ -369,7 +365,7 @@ const UserKundaliReport = (props) => {
                               </p>
                             ) : (
                               ""
-                            )} */}
+                            )}
                           </td>
                         </tr>
                         {/* <tr>
