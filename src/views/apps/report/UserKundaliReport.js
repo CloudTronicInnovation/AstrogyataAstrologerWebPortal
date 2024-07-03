@@ -9,6 +9,7 @@ import { panchanURL } from "../../../axiosConfig";
 import AshtvargaTables from "./ashtvargatables";
 
 import { PANCHANG_KEY } from "../../../panchangCredetials";
+import moment from "moment";
 
 const UserKundaliReport = (props) => {
   const [activelink, setActiveLink] = useState("0");
@@ -26,7 +27,6 @@ const UserKundaliReport = (props) => {
   });
 
   const [reqData, setReqData] = useState();
-  const [birthLocation, setBirthLocation] = useState(null);
 
   const [sunAshvarga, setSunAshvarga] = useState(null);
   const [moonAshvarga, setMoonAshvarga] = useState(null);
@@ -39,7 +39,6 @@ const UserKundaliReport = (props) => {
   useEffect(() => {
     if (localStorage.getItem("userKundaliInfo")) fetchPanchangDetails();
     setBasicDetails(JSON.parse(localStorage.getItem("userKundaliInfo")));
-    console.log(JSON.parse(localStorage.getItem("userKundaliInfo")));
   }, []);
 
   const fetchPanchangDetails = () => {
@@ -254,13 +253,10 @@ const UserKundaliReport = (props) => {
   }
 
   function getDayMonthYear(dateString) {
-    const date = new Date(dateString);
-
-    // Get day, month, and year
-    const day = date.getDate().toString(); // returns the day of the month (1-31)
-    const month = (date.getMonth() + 1).toString(); // returns the month (0-11),
-    const year = date.getFullYear().toString(); // returns the year (four digits)
-
+    let date = moment(dateString, "DD/MM/YYYY");
+    const day = date.format("DD"); // returns the day of the month (1-31)
+    const month = date.format("MM"); // returns the month (0-11),
+    const year = date.format("YYYY"); // returns the year (four digits)
     return { day, month, year };
   }
 
@@ -346,10 +342,7 @@ const UserKundaliReport = (props) => {
                         </tr>
                         <tr>
                           <th>Birth Place</th>
-                          <td>
-                            {basicDetails &&
-                              basicDetails?.birthPlace}
-                          </td>
+                          <td>{basicDetails && basicDetails?.birthPlace}</td>
                         </tr>
                         {/* <tr>
                     <th>Latitude</th>
