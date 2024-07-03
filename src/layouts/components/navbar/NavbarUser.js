@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import "../../../assets/scss/pages/users.scss";
 import {
   UncontrolledDropdown,
+  Dropdown,
   Badge,
   Media,
   DropdownToggle,
@@ -29,6 +30,7 @@ const handleNavigation = (e, path) => {
 };
 
 const NavbarUser = () => {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [profilepic, setProfilepic] = useState([]);
   const [astronotification, setAstronotification] = useState([]);
   const [newStatus, setNewStatus] = useState("");
@@ -37,6 +39,7 @@ const NavbarUser = () => {
   const [videonotify, setVideonotify] = useState([]);
   const [ButtonText, setButtonText] = useState("Online");
   const history = useHistory();
+  const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
   const handleofflineAstro = (e, path) => {
     e.preventDefault();
@@ -219,6 +222,7 @@ const NavbarUser = () => {
   };
 
   const handleStatus = (data) => {
+    setDropdownOpen(false);
     localStorage.setItem("notification_Accepted_id", data?._id);
     localStorage.setItem("CurrentChat_userid", data?.userid?._id);
     let accept = {
@@ -228,38 +232,55 @@ const NavbarUser = () => {
     axiosConfig
       .post(`/user/acceptNotificationByAstro/${data?._id}`, accept)
       .then((res) => {
+        setAstronotification((prevNotifications) =>
+          prevNotifications.filter(
+            (notification) => notification._id !== data._id
+          )
+        );
         console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-
-    if (data?.type === "Chat") {
-      //setting userdata for kundali view
-      axiosConfig
-        .get(`/admin/intekListByUser/${data?.userid?._id}`)
-        .then((res) => {
-          sessionStorage.setItem(
-            "accepteduserinfo",
-            JSON.stringify({ ...data, toggleMogel: true })
-          );
-          const intakeinfo = res.data?.data.filter(
-            (item) => item._id === data?.userintakeid
-          );
-          localStorage.setItem(
-            "userKundaliInfo",
-            JSON.stringify(intakeinfo[0])
-          );
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-
-      history.push({
-        pathname: "/app/astrochat/chatastro",
-        state: { ...data, toggleMogel: true },
-      });
-    }
+      if (data?.type === "Chat") {
+        //setting userdata for kundali view
+        axiosConfig
+          .get(`/admin/intekListByUser/${data?.userid?._id}`)
+          .then((res) => {
+            // sessionStorage.setItem(
+            //   "accepteduserinfo",
+            //   JSON.stringify({ ...data, toggleMogel: true })
+            // );
+            const intakeinfo = res.data?.data.filter(
+              (item) => item._id === data?.userintakeid
+            );
+            let kundaliinfo = intakeinfo[0];
+            axiosConfig
+              .post("/user/geo_detail", {
+                place: intakeinfo[0].birthPlace,
+              })
+              .then((res) => {
+                kundaliinfo = {
+                  ...kundaliinfo,
+                  userLatLong: res.data?.data?.geonames[0],
+                };
+                console.log(res.data?.data?.geonames[0]);
+                localStorage.setItem(
+                  "userKundaliInfo",
+                  JSON.stringify(kundaliinfo)
+                );
+              })
+              .catch((err) => console.error(err));
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+  
+    history.push({
+      pathname: "/app/astrochat/chatastro",
+      state: { ...data, toggleMogel: true },
+    });
+  }
     if (data?.type === "Call") {
       const userId = data.userid._id;
       const astroid = data.astroid._id;
@@ -314,6 +335,7 @@ const NavbarUser = () => {
       .then((res) => {
         console.log(res);
         getAllnotification();
+        setDropdownOpen(false);
       })
       .catch((err) => {
         console.log(err);
@@ -397,9 +419,11 @@ const NavbarUser = () => {
           </Button>
         </li>
 
-        <UncontrolledDropdown
+        <Dropdown
           className="dropdown-notification nav-item"
           tag="li"
+          isOpen={dropdownOpen}
+          toggle={toggleDropdown}
         >
           <DropdownToggle
             tag="a"
@@ -533,7 +557,7 @@ const NavbarUser = () => {
               </DropdownItem>
             </li>
           </DropdownMenu>
-        </UncontrolledDropdown>
+        </Dropdown>
 
         {/* astrologer api call */}
         <UncontrolledDropdown tag="li" className="dropdown-user nav-item">
