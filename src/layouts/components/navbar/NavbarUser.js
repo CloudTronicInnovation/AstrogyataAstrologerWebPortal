@@ -224,7 +224,6 @@ const NavbarUser = () => {
     let accept = {
       status: "Accept",
     };
-    console.log(data);
 
     axiosConfig
       .post(`/user/acceptNotificationByAstro/${data?._id}`, accept)
@@ -236,18 +235,36 @@ const NavbarUser = () => {
       });
 
     if (data?.type === "Chat") {
-      console.log(data.type);
+      //setting userdata for kundali view
+      axiosConfig
+        .get(`/admin/intekListByUser/${data?.userid?._id}`)
+        .then((res) => {
+          sessionStorage.setItem(
+            "accepteduserinfo",
+            JSON.stringify({ ...data, toggleMogel: true })
+          );
+          const intakeinfo = res.data?.data.filter(
+            (item) => item._id === data?.userintakeid
+          );
+          localStorage.setItem(
+            "userKundaliInfo",
+            JSON.stringify(intakeinfo[0])
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
       history.push({
         pathname: "/app/astrochat/chatastro",
         state: { ...data, toggleMogel: true },
       });
-      sessionStorage.setItem("accepteduserinfo",JSON.stringify({...data, toggleMogel:true}));
     }
     if (data?.type === "Call") {
-      const userId= data.userid._id
-      const astroid= data.astroid._id
-      const tono= data.userid.mobile
-      const fromno= data.astroid.mobile
+      const userId = data.userid._id;
+      const astroid = data.astroid._id;
+      const tono = data.userid.mobile;
+      const fromno = data.astroid.mobile;
 
       let obj = {
         userid: userId,
@@ -258,8 +275,7 @@ const NavbarUser = () => {
       };
 
       axiosConfig
-        .post(`/user/make_call`, obj, {
-        })
+        .post(`/user/make_call`, obj, {})
         .then((response) => {
           swal("Call Connecting", "SuccessFully");
         })

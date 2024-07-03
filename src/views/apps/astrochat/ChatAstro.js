@@ -50,7 +50,7 @@ class ChatApp extends PureComponent {
     this.props.history.push({
       pathname: "/app/report/kundalireport",
       state: {
-        userKundaliData: JSON.parse(sessionStorage.getItem("userKundaliInfo")),
+        userKundaliData: JSON.parse(localStorage.getItem("userKundaliInfo")),
       },
     });
   };
@@ -160,18 +160,19 @@ class ChatApp extends PureComponent {
       // this.getChatRoomId(data, 0);
       sessionStorage.removeItem("accepteduserinfo");
     }
-    console.log(JSON.parse(sessionStorage.getItem("accepteduserinfo")));
-    if (this.state.setUserInfoFlag || prevState.setUserInfoFlag) {
-      let data = this.state?.roomChatData;
-      const result = data.findLast((element) =>
-        element.msg.includes("FirstName")
-      );
-      sessionStorage.setItem(
-        "userKundaliInfo",
-        JSON.stringify(this.extractInfo(result.msg))
-      );
-      this.setState({ setUserInfoFlag: false });
-    }
+
+    // if (this.state.setUserInfoFlag || prevState.setUserInfoFlag) {
+    //   let data = this.state?.roomChatData;
+    //   const result = data.findLast((element) =>
+    //     element.msg.includes("FirstName")
+    //   );
+    //   sessionStorage.setItem(
+    //     "userKundaliInfo",
+    //     JSON.stringify(this.extractInfo(result.msg))
+    //   );
+    //   this.setState({ setUserInfoFlag: false });
+    // }
+    
     if (!this.state.timerStartFlag) {
       console.log("in start timmer...");
       let value = {

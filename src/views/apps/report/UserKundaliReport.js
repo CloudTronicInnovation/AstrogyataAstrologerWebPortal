@@ -26,6 +26,7 @@ const UserKundaliReport = (props) => {
   });
 
   const [reqData, setReqData] = useState();
+  const [birthLocation, setBirthLocation] = useState(null);
 
   const [sunAshvarga, setSunAshvarga] = useState(null);
   const [moonAshvarga, setMoonAshvarga] = useState(null);
@@ -43,18 +44,23 @@ const UserKundaliReport = (props) => {
 
   const fetchPanchangDetails = () => {
     const { day, month, year } = getDayMonthYear(
-      props.location?.state?.userKundaliData.dateOfBirth
+      props.location?.state?.userKundaliData.dob
     );
+    const birthlocation = JSON.parse(
+      props.location?.state?.userKundaliData?.birthPlace
+    );
+    setBirthLocation(birthlocation);
+
     const reqPanchangData = {
       day: day,
       month: month,
       year: year,
-      hour: props.location?.state?.userKundaliData?.timeOfBirth?.split(":")[0],
-      min: props.location?.state?.userKundaliData?.timeOfBirth?.split(":")[1],
+      hour: props.location?.state?.userKundaliData?.date_of_time?.split(":")[0],
+      min: props.location?.state?.userKundaliData?.date_of_time?.split(":")[1],
       // hour:2,min:4,
       // min: props.location?.state?.userKundaliData?.dateOfBirth?.split(".")[1],
-      lat: props.location?.state?.userKundaliData?.birthPlace?.latitude,
-      lon: props.location?.state?.userKundaliData?.birthPlace?.longitude,
+      lat: birthlocation.latitude,
+      lon: birthlocation.longitude,
       // lat: "11.66613000",
       // lon: "92.74635000",
       tzone: "5.5", // default timezone
@@ -326,47 +332,24 @@ const UserKundaliReport = (props) => {
                         </tr>
                         <tr>
                           <th>Name</th>
-                          <td>{basicDetails?.firstName}</td>
+                          <td>{basicDetails?.firstname}</td>
                         </tr>
                         <tr>
                           <th>Birth Date</th>
-                          <td>{basicDetails?.dateOfBirth}</td>
+                          <td>{basicDetails?.dob}</td>
                         </tr>
                         <tr>
                           <th>Birth Time</th>
                           <td>
-                            {/* {getAMPM(
-                              basicDetails?.birth_tym?.split(".")[0],
-                              basicDetails?.birth_tym?.split(".")[1]
-                            )} */}
-                            {basicDetails?.timeOfBirth}
+                            {getAMPM(
+                              basicDetails?.date_of_time?.split(":")[0],
+                              basicDetails?.date_of_time?.split(":")[1]
+                            )}
                           </td>
                         </tr>
                         <tr>
                           <th>Birth Place</th>
-                          <td>
-                            {basicDetails.birthPlace != null ? (
-                              <p>
-                                <span>
-                                  {basicDetails?.birthPlace?.name
-                                    ? `${basicDetails?.birthPlace.name},`
-                                    : ""}
-                                  &nbsp;
-                                </span>
-                                <span>
-                                  {basicDetails?.birthPlace?.stateCode
-                                    ? `${basicDetails?.birthPlace.stateCode},`
-                                    : ""}
-                                  &nbsp;
-                                </span>
-                                <span>
-                                  {basicDetails?.birthPlace?.countryCode}
-                                </span>
-                              </p>
-                            ) : (
-                              ""
-                            )}
-                          </td>
+                          <td>{birthLocation && birthLocation?.name}</td>
                         </tr>
                         {/* <tr>
                     <th>Latitude</th>
@@ -501,7 +484,7 @@ const UserKundaliReport = (props) => {
                         {ReactHtmlParser(lagnaSvg)}
                       </Col>
                     )}
-                    
+
                     {svgVishible?.moonSvg && (
                       <Col md="6" className="panchang-chart mt-2 text-center">
                         <h6 className="fw-semibold text-center">Moon Chart</h6>
