@@ -418,6 +418,14 @@ class ChatApp extends PureComponent {
 
   submitHandler = async (e) => {
     e.preventDefault();
+     if (this.state.msg.trim() === "") {
+      Swal.fire({
+                    title: "Message cannot be send empty",
+                    width: "300px",
+                    timer: 1500,
+                  });
+      return; // Exit the function to prevent further execution
+    }
     // debugger;
     let { userId, astroId } = this.state;
     if (this.state.msg !== "" || this.state.msg.length === 0) {
