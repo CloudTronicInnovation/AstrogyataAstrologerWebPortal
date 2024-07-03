@@ -154,12 +154,12 @@ class ChatApp extends PureComponent {
   componentDidUpdate(prevProps, prevState) {
     let astroId = localStorage.getItem("astroId");
     let userId = localStorage.getItem("CurrentChat_userid");
-
-    if (JSON.parse(sessionStorage.getItem("accepteduserinfo"))) {
-      const data = JSON.parse(sessionStorage.getItem("accepteduserinfo"));
-      // this.getChatRoomId(data, 0);
-      sessionStorage.removeItem("accepteduserinfo");
-    }
+ 
+    // if (JSON.parse(sessionStorage.getItem("accepteduserinfo"))) {
+    //   const data = JSON.parse(sessionStorage.getItem("accepteduserinfo"));
+    //   // this.getChatRoomId(data, 0);
+    //   sessionStorage.removeItem("accepteduserinfo");
+    // }
 
     // if (this.state.setUserInfoFlag || prevState.setUserInfoFlag) {
     //   let data = this.state?.roomChatData;
@@ -600,36 +600,6 @@ class ChatApp extends PureComponent {
         console.log(error);
       });
   };
-  extractInfo(str) {
-    const info = {};
-
-    // Extract first name
-    const firstNameMatch = str.match(/FirstName: ([^<]+)<br>/);
-    info.firstName = firstNameMatch ? firstNameMatch[1] : null;
-
-    // Extract birthplace details
-    // const birthPlaceMatch = str.match(/BirthPlace: ({[^<]+})<br>/);
-    // if (birthPlaceMatch) {
-    //   info.birthPlace = JSON.parse(birthPlaceMatch[1]);
-    // }
-
-    // Extract time of birth
-    const timeOfBirthMatch = str.match(/Date Of Time: ([^<]+)<br>/);
-    info.timeOfBirth = timeOfBirthMatch ? timeOfBirthMatch[1] : null;
-
-    // Extract date of birth
-    const dateOfBirthMatch = str.match(/Date Of Birth: ([^<]+)<br>/);
-    info.dateOfBirth = dateOfBirthMatch ? dateOfBirthMatch[1] : null;
-
-    // Extract gender
-    const genderMatch = str.match(/Gender: ([^<]+)<br>/);
-    info.gender = genderMatch ? genderMatch[1] : null;
-
-    const placeinfo = str.match(/<!--PlaceInfo:\s*(\{[^>]+\})-->/);
-    info.birthPlace = placeinfo ? JSON.parse(placeinfo[1]) : null;
-
-    return info;
-  }
 
   render() {
     const { indexValue, showOldChats } = this.state;
