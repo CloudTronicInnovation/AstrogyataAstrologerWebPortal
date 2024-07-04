@@ -109,19 +109,20 @@ class ChatApp extends PureComponent {
     this.setState({ ModdleToggle: false });
   };
   componentDidMount() {
+    // this.startTimer();
+    let astroId = localStorage.getItem("astroId");
+    let userId = localStorage.getItem("CurrentChat_userid");
     if (this.props?.location?.state) {
       const userData = this.props?.location?.state;
       this.getChatRoomId(userData, userData.indexValue);
     }
-    // this.startTimer();
-    let astroId = localStorage.getItem("astroId");
-    let userId = localStorage.getItem("CurrentChat_userid");
 
     if (JSON.parse(localStorage.getItem("minute"))) {
       let minute = JSON.parse(localStorage.getItem("minute"));
       this.setState({ minutes: minute, seconds: minute * 60 });
     }
-    axiosConfig
+    setTimeout(() => {
+      axiosConfig
       .get(`/user/astrogetRoomid/${astroId}`)
       .then((response) => {
         console.log(response);
@@ -143,6 +144,8 @@ class ChatApp extends PureComponent {
       .catch((error) => {
         console.log(error);
       });
+    }, 1500);
+    
     this.getCallCharge();
 
     //count down for 30min
