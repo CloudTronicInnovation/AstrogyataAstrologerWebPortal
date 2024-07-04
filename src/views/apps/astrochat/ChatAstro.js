@@ -388,6 +388,7 @@ class ChatApp extends PureComponent {
 
   getChatRoomId = async (user, i) => {
     console.log(user);
+    console.log(user);
     this.setState({ userData: user });
     this.setState({ ModdleToggle: true });
     let userIds = [user?.userid?._id];
@@ -805,7 +806,7 @@ class ChatApp extends PureComponent {
                               </span>
                             </div>
 
-                            <div className="text-success">
+                            <div className="text-dark fw-bold">
                               <p>{this.formatTime(this.state.setTimer)}</p>
                               {/* <h1>Timer: {this.state.timer} seconds</h1> */}
                             </div>
