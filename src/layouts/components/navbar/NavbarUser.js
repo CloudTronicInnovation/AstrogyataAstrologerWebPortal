@@ -244,7 +244,7 @@ const NavbarUser = () => {
       .catch((err) => {
         console.log(err);
       });
-<<<<<<< Updated upstream
+
     if (data?.type === "Chat") {
       //setting userdata for kundali view
       axiosConfig
@@ -283,7 +283,7 @@ const NavbarUser = () => {
         pathname: "/app/astrochat/chatastro",
       });
     }
-=======
+
       if (data?.type === "Chat") {
         //setting userdata for kundali view
         axiosConfig
@@ -323,7 +323,7 @@ const NavbarUser = () => {
       // state: { ...data, toggleMogel: true },
     });
   }
->>>>>>> Stashed changes
+
     if (data?.type === "Call") {
       const userId = data.userid._id;
 
