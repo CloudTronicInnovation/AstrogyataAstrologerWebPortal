@@ -43,7 +43,6 @@ const NavbarUser = () => {
 
   const handleofflineAstro = (e, path) => {
     e.preventDefault();
-    debugger;
     const config = {
       headers: {
         Authorization: `Bearer ${JSON.parse(localStorage.getItem("ad-token"))}`,
@@ -52,13 +51,16 @@ const NavbarUser = () => {
     axiosConfig
       .get(`/user/logout`, config)
       .then((res) => {
-        console.log(res);
+        // console.log(res);    
         window.localStorage.clear();
-        swal("Logout Successfully");
-        window.location.replace(path);
+        swal("Logout Successfully"); 
+        // Append a cache-buster query parameter to the path
+        const cacheBusterPath = `${path}?cacheBuster=${new Date().getTime()}`;
+        window.location.replace(cacheBusterPath);
       })
       .catch((err) => {
-        swal("Logout Api not Working ");
+        console.error("Logout error:", err);
+        swal("Logout API not working");
       });
   };
 
@@ -131,7 +133,7 @@ const NavbarUser = () => {
     swalWithBootstrapButtons
       .fire({
         title: title,
-        icon: "info",
+        // icon: "info",
         showCancelButton: true,
         confirmButtonText: confirmButtonText,
         cancelButtonText: "Cancel",
