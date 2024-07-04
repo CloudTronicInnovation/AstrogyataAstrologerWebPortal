@@ -48,7 +48,8 @@ class ChatApp extends PureComponent {
   }
   handleKundaly = () => {
     this.props.history.push({
-      pathname: "/app/report/kundalireport"
+      pathname: "/app/report/kundalireport",
+      state: { user: this.state.userData },
     });
   };
 
@@ -108,6 +109,9 @@ class ChatApp extends PureComponent {
     this.setState({ ModdleToggle: false });
   };
   componentDidMount() {
+    if (this.props?.location?.state) {
+      this.getChatRoomId(this.props?.location?.state, 0);
+    }
     // this.startTimer();
     let astroId = localStorage.getItem("astroId");
     let userId = localStorage.getItem("CurrentChat_userid");
@@ -383,6 +387,7 @@ class ChatApp extends PureComponent {
   };
 
   getChatRoomId = async (user, i) => {
+    console.log(user);
     this.setState({ userData: user });
     this.setState({ ModdleToggle: true });
     let userIds = [user?.userid?._id];
@@ -418,12 +423,12 @@ class ChatApp extends PureComponent {
 
   submitHandler = async (e) => {
     e.preventDefault();
-     if (this.state.msg.trim() === "") {
+    if (this.state.msg.trim() === "") {
       Swal.fire({
-                    title: "Message cannot be send empty",
-                    width: "300px",
-                    timer: 1500,
-                  });
+        title: "Message cannot be send empty",
+        width: "300px",
+        timer: 1500,
+      });
       return; // Exit the function to prevent further execution
     }
     // debugger;

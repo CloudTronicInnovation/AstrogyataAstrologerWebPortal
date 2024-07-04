@@ -35,10 +35,13 @@ const UserKundaliReport = (props) => {
   const [jupiterAshvarga, setJupiterAshvarga] = useState(null);
   const [venusAshvarga, setVenusAshvarga] = useState(null);
   const [saturnAshvarga, setSaturnAshvarga] = useState(null);
+ 
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     if (localStorage.getItem("userKundaliInfo")) fetchPanchangDetails();
     setBasicDetails(JSON.parse(localStorage.getItem("userKundaliInfo")));
+    setUserData(props.location?.state?.user);
   }, []);
 
   const fetchPanchangDetails = () => {
@@ -276,7 +279,10 @@ const UserKundaliReport = (props) => {
   return (
     <>
       <Link
-        to="/app/astrochat/chatastro"
+        to={{
+          pathname: "/app/astrochat/chatastro",
+          state: userData,
+        }}
         className="btn btn-danger float-right btn-sm text-white"
       >
         Back
