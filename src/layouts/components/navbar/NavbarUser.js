@@ -244,45 +244,44 @@ const NavbarUser = () => {
       .catch((err) => {
         console.log(err);
       });
-      if (data?.type === "Chat") {
-        //setting userdata for kundali view
-        axiosConfig
-          .get(`/admin/intekListByUser/${data?.userid?._id}`)
-          .then((res) => {
-            // sessionStorage.setItem(
-            //   "accepteduserinfo",
-            //   JSON.stringify({ ...data, toggleMogel: true })
-            // );
-            const intakeinfo = res.data?.data.filter(
-              (item) => item._id === data?.userintakeid
-            );
-            let kundaliinfo = intakeinfo[0];
-            axiosConfig
-              .post("/user/geo_detail", {
-                place: intakeinfo[0].birthPlace,
-              })
-              .then((res) => {
-                kundaliinfo = {
-                  ...kundaliinfo,
-                  userLatLong: res.data?.data?.geonames[0],
-                };
-                
-                localStorage.setItem(
-                  "userKundaliInfo",
-                  JSON.stringify(kundaliinfo)
-                );
-              })
-              .catch((err) => console.error(err));
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-  
-    history.push({
-      pathname: "/app/astrochat/chatastro",
-      state: { ...data, toggleMogel: true },
-    });
-  }
+    if (data?.type === "Chat") {
+      //setting userdata for kundali view
+      axiosConfig
+        .get(`/admin/intekListByUser/${data?.userid?._id}`)
+        .then((res) => {
+          // sessionStorage.setItem(
+          //   "accepteduserinfo",
+          //   JSON.stringify({ ...data, toggleMogel: true })
+          // );
+          const intakeinfo = res.data?.data.filter(
+            (item) => item._id === data?.userintakeid
+          );
+          let kundaliinfo = intakeinfo[0];
+          axiosConfig
+            .post("/user/geo_detail", {
+              place: intakeinfo[0].birthPlace,
+            })
+            .then((res) => {
+              kundaliinfo = {
+                ...kundaliinfo,
+                userLatLong: res.data?.data?.geonames[0],
+              };
+
+              localStorage.setItem(
+                "userKundaliInfo",
+                JSON.stringify(kundaliinfo)
+              );
+            })
+            .catch((err) => console.error(err));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      history.push({
+        pathname: "/app/astrochat/chatastro",
+      });
+    }
     if (data?.type === "Call") {
       const userId = data.userid._id;
       const astroid = data.astroid._id;

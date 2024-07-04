@@ -49,7 +49,7 @@ class ChatApp extends PureComponent {
   handleKundaly = () => {
     this.props.history.push({
       pathname: "/app/report/kundalireport",
-      state: { user: this.state.userData },
+      state: { user: this.state.userData, indexValue: this.state.indexValue },
     });
   };
 
@@ -110,7 +110,8 @@ class ChatApp extends PureComponent {
   };
   componentDidMount() {
     if (this.props?.location?.state) {
-      this.getChatRoomId(this.props?.location?.state, 0);
+      const userData = this.props?.location?.state;
+      this.getChatRoomId(userData, userData.indexValue);
     }
     // this.startTimer();
     let astroId = localStorage.getItem("astroId");
@@ -387,8 +388,6 @@ class ChatApp extends PureComponent {
   };
 
   getChatRoomId = async (user, i) => {
-    console.log(user);
-    console.log(user);
     this.setState({ userData: user });
     this.setState({ ModdleToggle: true });
     let userIds = [user?.userid?._id];
