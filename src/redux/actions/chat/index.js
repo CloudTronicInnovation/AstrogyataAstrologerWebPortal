@@ -112,3 +112,12 @@ export const markSeenAllMessages = id => {
       .catch(err => console.log(err))
   }
 }
+export const chatAcceptStatus = chatStatus => {
+  return dispatch => {
+        dispatch({
+          type: "CHAT_STATUS",
+          chatStatus
+        })
+  }
+}
+

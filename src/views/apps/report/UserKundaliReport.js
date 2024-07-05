@@ -10,6 +10,8 @@ import AshtvargaTables from "./ashtvargatables";
 
 import { PANCHANG_KEY } from "../../../panchangCredetials";
 import moment from "moment";
+import { useDispatch } from "react-redux";
+import { chatAcceptStatus } from "../../../redux/actions/chat";
 
 const UserKundaliReport = (props) => {
   const [activelink, setActiveLink] = useState("0");
@@ -38,12 +40,14 @@ const UserKundaliReport = (props) => {
 
   const [userData, setUserData] = useState(null);
   const [indexValue,setIndexValue] = useState(null);
-
+  const dispatch = useDispatch();
+  
   useEffect(() => {
     if (localStorage.getItem("userKundaliInfo")) fetchPanchangDetails();
     setBasicDetails(JSON.parse(localStorage.getItem("userKundaliInfo")));
     setUserData(props.location?.state?.user);
     setIndexValue(props.location.state?.indexValue);
+    dispatch(chatAcceptStatus("accepted"));
   }, []);
 
   const fetchPanchangDetails = () => {
@@ -54,7 +58,7 @@ const UserKundaliReport = (props) => {
 
     const reqPanchangData = {
       day: day,
-      month: month,
+      month: month, 
       year: year,
       hour: date_of_time?.split(":")[0],
       min: date_of_time?.split(":")[1],

@@ -7,6 +7,8 @@ import ChatAppMassage from "./ChatAppMassage";
 import axiosConfig from "../../../axiosConfig";
 import Swal from "sweetalert2";
 import { FaArrowAltCircleRight } from "react-icons/fa";
+import { chatAcceptStatus } from "../../../redux/actions/chat";
+import { connect } from "react-redux";
 
 class ChatApp extends PureComponent {
   constructor(props) {
@@ -19,7 +21,7 @@ class ChatApp extends PureComponent {
       selectedUserIndex: 0,
       setUserInfoFlag: null,
       setTimer: 0,
-      timerStartFlag: false,
+      timerStartFlag: null,
       callCharge: null,
       old_msg_id: null,
       chatinterval: null,
@@ -109,54 +111,58 @@ class ChatApp extends PureComponent {
     this.setState({ ModdleToggle: false });
   };
   componentDidMount() {
+    this.props.chatAcceptStatus("accepted");
+    // this.props.chatAcceptStatus("sajids data");
     // this.startTimer();
-    let astroId = localStorage.getItem("astroId");
-    let userId = localStorage.getItem("CurrentChat_userid");
-    if (this.props?.location?.state) {
-      const userData = this.props?.location?.state;
-      this.getChatRoomId(userData, userData.indexValue);
-    }
-
-    if (JSON.parse(localStorage.getItem("minute"))) {
-      let minute = JSON.parse(localStorage.getItem("minute"));
-      this.setState({ minutes: minute, seconds: minute * 60 });
-    }
-    setTimeout(() => {
-      axiosConfig
-      .get(`/user/astrogetRoomid/${astroId}`)
-      .then((response) => {
-        console.log(response);
-        if (response.data.status === true) {
-          this.setState({
-            userChatList: response?.data?.data,
-            roomId: response?.data?.data?.roomid,
-          });
-
-          let userdata = response.data.data.find((item, ind) => {
-            if (item?.userid?._id === userId) {
-              this.setState({ selectedUserIndex: ind });
-              return item;
-            }
-          });
-        }
-        this.checkMessage();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    }, 1500);
-    
-    this.getCallCharge();
-
-    //count down for 30min
-    this.setState({ minutes: 30, seconds: 30 * 60 });
-    // this.startTimer();
-    this.secondsToTime(30 * 60);
     // if (this.props?.location?.state?.toggleMogel) {
     //   this.getChatRoomId(this.props?.location?.state, 0);
     // }
   }
   componentDidUpdate(prevProps, prevState) {
+    if (this.props?.chat?.chatStatus == "accepted") {
+      let astroId = localStorage.getItem("astroId");
+      let userId = localStorage.getItem("CurrentChat_userid");
+      if (this.props?.location?.state) {
+        const userData = this.props?.location?.state;
+        this.getChatRoomId(userData, userData.indexValue);
+      }
+
+      if (JSON.parse(localStorage.getItem("minute"))) {
+        let minute = JSON.parse(localStorage.getItem("minute"));
+        this.setState({ minutes: minute, seconds: minute * 60 });
+      }
+
+      axiosConfig
+        .get(`/user/astrogetRoomid/${astroId}`)
+        .then((response) => {
+          console.log(response);
+          if (response.data.status === true) {
+            this.setState({
+              userChatList: response?.data?.data,
+              roomId: response?.data?.data?.roomid,
+            });
+
+            let userdata = response.data.data.find((item, ind) => {
+              if (item?.userid?._id === userId) {
+                this.setState({ selectedUserIndex: ind });
+                return item;
+              }
+            });
+          }
+          this.checkMessage();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      this.getCallCharge();
+
+      //count down for 30min
+      this.setState({ minutes: 30, seconds: 30 * 60 });
+      // this.startTimer();
+      this.secondsToTime(30 * 60);
+      this.props.chatAcceptStatus("completed");
+    }
+    console.log(this.props?.chat?.chatStatus);
     let astroId = localStorage.getItem("astroId");
     let userId = localStorage.getItem("CurrentChat_userid");
 
@@ -178,7 +184,7 @@ class ChatApp extends PureComponent {
     //   this.setState({ setUserInfoFlag: false });
     // }
 
-    if (!this.state.timerStartFlag) {
+    if (this.state.timerStartFlag) {
       console.log("in start timmer...");
       let value = {
         astroId: astroId,
@@ -197,7 +203,7 @@ class ChatApp extends PureComponent {
               this.handleStart();
             }, 50000);
             sessionStorage.setItem("startchatinterId", startchatinterId);
-            this.setState({ timerStartFlag: true });
+            this.setState({ timerStartFlag: false });
             clearInterval(sessionStorage.getItem("intervalforroom"));
             const id = setInterval(() => {
               axiosConfig
@@ -229,7 +235,6 @@ class ChatApp extends PureComponent {
                   clearInterval(id);
                 });
             }, 3000);
-
             sessionStorage.setItem("intervalforroom", id);
           }
         })
@@ -266,6 +271,8 @@ class ChatApp extends PureComponent {
                   newMsgNotification: prevState.newMsgNotification + 1,
                 }));
               }
+              if (this.state.timerStartFlag===null)
+                this.setState({ timerStartFlag: true });
               // this.setState({ newMsgNotification: [...this.state.newMsgNotification, newmessage] });
               this.setState((prevState) => ({
                 roomChatData: [...prevState.roomChatData, newmessage],
@@ -879,5 +886,11 @@ class ChatApp extends PureComponent {
     );
   }
 }
-
-export default ChatApp;
+const mapStateToProps = (state) => {
+  return {
+    chat: state.chatApp.chats,
+  };
+};
+export default connect(mapStateToProps, {
+  chatAcceptStatus,
+})(ChatApp);

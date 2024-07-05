@@ -23,6 +23,8 @@ import { Bell } from "react-feather";
 import "moment-timezone";
 import moment from "moment";
 import swal from "sweetalert";
+import { useDispatch, useSelector } from "react-redux";
+import { chatAcceptStatus } from "../../../redux/actions/chat";
 
 const handleNavigation = (e, path) => {
   e.preventDefault();
@@ -40,6 +42,7 @@ const NavbarUser = () => {
   const [ButtonText, setButtonText] = useState("Online");
   const history = useHistory();
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
+  const dispatch = useDispatch();
 
   const handleofflineAstro = (e, path) => {
     e.preventDefault();
@@ -51,9 +54,9 @@ const NavbarUser = () => {
     axiosConfig
       .get(`/user/logout`, config)
       .then((res) => {
-        // console.log(res);    
+        // console.log(res);
         window.localStorage.clear();
-        swal("Logout Successfully"); 
+        swal("Logout Successfully");
         // Append a cache-buster query parameter to the path
         const cacheBusterPath = `${path}?cacheBuster=${new Date().getTime()}`;
         window.location.replace(cacheBusterPath);
@@ -70,7 +73,6 @@ const NavbarUser = () => {
     await axiosConfig
       .get(`/user/wait_queue_list/${astroId}`)
       .then((res) => {
-        console.log(res);
         setAstronotification(res.data.data);
         setViewnotify(res.data.count);
       })
@@ -240,14 +242,14 @@ const NavbarUser = () => {
             (notification) => notification._id !== data._id
           )
         );
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
 
     if (data?.type === "Chat") {
-      //setting userdata for kundali view
+      dispatch(chatAcceptStatus("accepted"));
+      // setting userdata for kundali view
       axiosConfig
         .get(`/admin/intekListByUser/${data?.userid?._id}`)
         .then((res) => {
@@ -285,45 +287,45 @@ const NavbarUser = () => {
       });
     }
 
-      if (data?.type === "Chat") {
-        //setting userdata for kundali view
-        axiosConfig
-          .get(`/admin/intekListByUser/${data?.userid?._id}`)
-          .then((res) => {
-            // sessionStorage.setItem(
-            //   "accepteduserinfo",
-            //   JSON.stringify({ ...data, toggleMogel: true })
-            // );
-            const intakeinfo = res.data?.data.filter(
-              (item) => item._id === data?.userintakeid
-            );
-            let kundaliinfo = intakeinfo[0];
-            axiosConfig
-              .post("/user/geo_detail", {
-                place: intakeinfo[0].birthPlace,
-              })
-              .then((res) => {
-                kundaliinfo = {
-                  ...kundaliinfo,
-                  userLatLong: res.data?.data?.geonames[0],
-                };
-                
-                localStorage.setItem(
-                  "userKundaliInfo",
-                  JSON.stringify(kundaliinfo)
-                );
-              })
-              .catch((err) => console.error(err));
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-  
-    history.push({
-      pathname: "/app/astrochat/chatastro",
-      // state: { ...data, toggleMogel: true },
-    });
-  }
+    // if (data?.type === "Chat") {
+    //   //setting userdata for kundali view
+    //   axiosConfig
+    //     .get(`/admin/intekListByUser/${data?.userid?._id}`)
+    //     .then((res) => {
+    //       // sessionStorage.setItem(
+    //       //   "accepteduserinfo",
+    //       //   JSON.stringify({ ...data, toggleMogel: true })
+    //       // );
+    //       const intakeinfo = res.data?.data.filter(
+    //         (item) => item._id === data?.userintakeid
+    //       );
+    //       let kundaliinfo = intakeinfo[0];
+    //       axiosConfig
+    //         .post("/user/geo_detail", {
+    //           place: intakeinfo[0].birthPlace,
+    //         })
+    //         .then((res) => {
+    //           kundaliinfo = {
+    //             ...kundaliinfo,
+    //             userLatLong: res.data?.data?.geonames[0],
+    //           };
+
+    //           localStorage.setItem(
+    //             "userKundaliInfo",
+    //             JSON.stringify(kundaliinfo)
+    //           );
+    //         })
+    //         .catch((err) => console.error(err));
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+
+    //   history.push({
+    //     pathname: "/app/astrochat/chatastro",
+    //     // state: { ...data, toggleMogel: true },
+    //   });
+    // }
 
     if (data?.type === "Call") {
       const userId = data.userid._id;
