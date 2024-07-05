@@ -9,6 +9,7 @@ class ChatAppList extends React.Component {
       Index: "",
       connecting_usrid: "",
       userChatList: this.props?.userChatList,
+      selectedUser:this.props?.selectedUser,
       roomid: "",
     };
   }
@@ -16,10 +17,9 @@ class ChatAppList extends React.Component {
     let currentuserid = localStorage.getItem("CurrentChat_userid");
     this.setState({ connecting_usrid: currentuserid });
   }
-
+  
   render() {
-    const { userChatList, newMessage } = this.props;
-
+    const { userChatList, newMessage,selectedUser } = this.props;
     return (
       <ul
         className="listofchat pl-0"
@@ -27,7 +27,7 @@ class ChatAppList extends React.Component {
       >
         {userChatList && userChatList?.length
           ? userChatList?.map((user, i) => {
-              if (this.state.connecting_usrid === user?.userid?._id) {
+            if (selectedUser.userid._id===user.userid._id) {
                 return (
                   <li
                     key={i}
