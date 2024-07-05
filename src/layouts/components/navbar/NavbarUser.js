@@ -70,6 +70,7 @@ const NavbarUser = () => {
     await axiosConfig
       .get(`/user/wait_queue_list/${astroId}`)
       .then((res) => {
+        console.log(res);
         setAstronotification(res.data.data);
         setViewnotify(res.data.count);
       })
