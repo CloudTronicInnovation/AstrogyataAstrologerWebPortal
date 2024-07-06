@@ -281,7 +281,7 @@ class ChatApp extends PureComponent {
         .catch((error) => {
           console.log(error);
         });
-    }, 4000);
+    }, 3000);
     this.setState({ chatinterval: id });
   }
 
