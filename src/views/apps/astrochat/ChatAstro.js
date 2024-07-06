@@ -133,41 +133,37 @@ class ChatApp extends PureComponent {
         this.setState({ minutes: minute, seconds: minute * 60 });
       }
 
-      axiosConfig
-        .get(`/user/astrogetRoomid/${astroId}`)
-        .then((response) => {
-          console.log(response);
-          if (response.data.status === true) {
-            console.log(response?.data?.data);
-            let currentuserid = localStorage.getItem("CurrentChat_userid");
+      setTimeout(() => {
+        axiosConfig
+          .get(`/user/astrogetRoomid/${astroId}`)
+          .then((response) => {
+            if (response.data.status === true) {
+              let userdata = response.data.data.find((item, ind) => {
+                if (item?.userid?._id === userId) {
+                  this.setState({ selectedUserIndex: ind });
+                  return item;
+                }
+              });
+              this.setState({
+                userChatList: response?.data?.data,
+                selectedUser: userdata,
+                roomId: response?.data?.data?.roomid,
+              });
+            }
+            this.checkMessage();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        this.getCallCharge();
 
-            let userdata = response.data.data.find((item, ind) => {
-              if (item?.userid?._id === userId) {
-                this.setState({ selectedUserIndex: ind });
-                return item;
-              }
-            });
-            this.setState({
-              userChatList: response?.data?.data,
-              selectedUser: userdata,
-              roomId: response?.data?.data?.roomid,
-            });
-          }
-          this.checkMessage();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      this.getCallCharge();
-
-      //count down for 30min
-      this.setState({ minutes: 30, seconds: 30 * 60 });
-      // this.startTimer();
-      this.secondsToTime(30 * 60);
-      this.props.chatAcceptStatus("completed");
+        //count down for 30min
+        this.setState({ minutes: 30, seconds: 30 * 60 });
+        // this.startTimer();
+        this.secondsToTime(30 * 60);
+        this.props.chatAcceptStatus("completed");
+      }, 2000);
     }
-    let astroId = localStorage.getItem("astroId");
-    let userId = localStorage.getItem("CurrentChat_userid");
 
     // if (JSON.parse(sessionStorage.getItem("accepteduserinfo"))) {
     //   const data = JSON.parse(sessionStorage.getItem("accepteduserinfo"));
@@ -188,6 +184,8 @@ class ChatApp extends PureComponent {
     // }
 
     if (!this.state.timerStartFlag) {
+      let astroId = localStorage.getItem("astroId");
+      let userId = localStorage.getItem("CurrentChat_userid");
       console.log("in start timmer...");
       let value = {
         astroId: astroId,
@@ -254,6 +252,7 @@ class ChatApp extends PureComponent {
   }
   checkMessage() {
     let astroId = localStorage.getItem("astroId");
+    clearInterval(this.state.chatinterval);
     const id = setInterval(() => {
       axiosConfig
         .get(`/user/astrogetRoomid/${astroId}`)
@@ -263,12 +262,12 @@ class ChatApp extends PureComponent {
             let existingmsg = this.state.roomChatData?.findLast(
               (element) => element._id === newmessage._id
             );
-
             if (!existingmsg) {
               if (!this.state.ModdleToggle) {
-                this.setState((prevState) => ({
-                  newMsgNotification: prevState.newMsgNotification + 1,
-                }));
+                if (this.state.roomChatData.length)
+                  this.setState((prevState) => ({
+                    newMsgNotification: prevState.newMsgNotification + 1,
+                  }));
               }
               // this.setState({ newMsgNotile) {
               //   this.setState((prevStatefication: [...this.state.newMsgNotification, newmessage] });
@@ -281,7 +280,7 @@ class ChatApp extends PureComponent {
         .catch((error) => {
           console.log(error);
         });
-    }, 3000);
+    }, 2000);
     this.setState({ chatinterval: id });
   }
 
@@ -352,9 +351,11 @@ class ChatApp extends PureComponent {
   }
 
   getChatdata = () => {
-    setInterval(() => {
+    clearInterval(sessionStorage.getItem("getchatint_id"));
+    const id = setInterval(() => {
       this.getChatRoomIdnew(this.state.userData, this.state.indexValue);
     }, 5000);
+    sessionStorage.setItem("getchatint_id", id);
   };
 
   getChatRoomIdnew = (user, i) => {
