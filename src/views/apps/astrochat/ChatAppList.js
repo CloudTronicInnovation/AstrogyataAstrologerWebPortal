@@ -27,7 +27,7 @@ class ChatAppList extends React.Component {
       >
         {userChatList && userChatList?.length
           ? userChatList?.map((user, i) => {
-            if (selectedUser?.userid._id===user?.userid._id) {
+            if (selectedUser?.userid?._id===user?.userid?._id) {
                 return (
                   <li
                     key={i}
