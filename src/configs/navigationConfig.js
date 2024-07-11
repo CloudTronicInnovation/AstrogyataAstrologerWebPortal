@@ -166,14 +166,14 @@ const navigationConfig = [
         permissions: ["admin", "editor"],
         navLink: "/app/report/chatreport",
       },
-      {
-        id: "Video Call Report",
-        title: "Video Call Report",
-        type: "item",
-        icon: <Icon.Circle size={12} />,
-        permissions: ["admin", "editor"],
-        navLink: "/app/report/videocallreport",
-      },
+      // {
+      //   id: "Video Call Report",
+      //   title: "Video Call Report",
+      //   type: "item",
+      //   icon: <Icon.Circle size={12} />,
+      //   permissions: ["admin", "editor"],
+      //   navLink: "/app/report/videocallreport",
+      // },
     ],
   },
 

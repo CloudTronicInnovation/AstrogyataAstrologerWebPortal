@@ -1,10 +1,7 @@
 import React from "react";
 import { Row, Col, Label } from "reactstrap";
-
 import "../../../assets/scss/plugins/tables/_agGridStyleOverride.scss";
-
 import "../../../assets/scss/pages/users.scss";
-
 import axiosConfig from "../../../axiosConfig";
 import Breadcrumbs from "../../../components/@vuexy/breadCrumbs/BreadCrumb";
 
@@ -20,6 +17,7 @@ class EarningReport extends React.Component {
     await axiosConfig
       .get(`/user/getAstroEarnings/${astroid}`)
       .then((response) => {
+        console.log(response);
         let rowData = response.data.data;
         this.setState({ rowData });
       });

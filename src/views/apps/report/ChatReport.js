@@ -130,31 +130,36 @@ class ChatReport extends React.Component {
   componentDidMount() {
     let astroid = localStorage.getItem("astroId");
     axiosConfig.get(`/user/astroChathistory/${astroid}`).then((response) => {
-      console.log(response);
+      // console.log("Response Data: ", response.data.data);
       let AllReport = response.data.data;
       let rowData = AllReport?.filter((value) => {
         if (value?.type === "Chat") {
           return value;
         }
       });
+      console.log("Filtered Row Data: ", rowData);
       this.setState({ rowData });
     });
     this.ChatHistoryList();
   }
+  
   ChatHistoryList = () => {
     setInterval(() => {
       let astroid = localStorage.getItem("astroId");
       axiosConfig.get(`/user/astroChathistory/${astroid}`).then((response) => {
+        // console.log(response);
         let AllReport = response.data.data;
         let rowData = AllReport?.filter((value) => {
           if (value?.type === "Chat") {
             return value;
           }
         });
+        console.log("Filtered Row Data in Interval: ", rowData);
         this.setState({ rowData });
       });
     }, 10000);
   };
+  
 
   onGridReady = (params) => {
     this.gridApi = params.api;
@@ -280,7 +285,7 @@ class ChatReport extends React.Component {
                           animateRows={true}
                           floatingFilter={false}
                           pagination={true}
-                          paginationPageSize={this.state.paginationPageSize}
+                          paginationPageSize={this.state.paginationPageSize || 20}
                           pivotPanelShow="always"
                           enableRtl={context.state.direction === "rtl"}
                         />
