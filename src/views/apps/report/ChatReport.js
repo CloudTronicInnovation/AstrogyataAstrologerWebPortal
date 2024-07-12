@@ -137,14 +137,14 @@ class ChatReport extends React.Component {
           return value;
         }
       });
-      console.log("Filtered Row Data: ", rowData);
+      // console.log("Filtered Row Data: ", rowData);
       this.setState({ rowData });
     });
     this.ChatHistoryList();
   }
   
   ChatHistoryList = () => {
-    setInterval(() => {
+    // setInterval(() => {
       let astroid = localStorage.getItem("astroId");
       axiosConfig.get(`/user/astroChathistory/${astroid}`).then((response) => {
         // console.log(response);
@@ -154,10 +154,10 @@ class ChatReport extends React.Component {
             return value;
           }
         });
-        console.log("Filtered Row Data in Interval: ", rowData);
         this.setState({ rowData });
+        console.log("Filtered Row Data in Interval: ", rowData);
       });
-    }, 10000);
+    // }, 10000);
   };
   
 
