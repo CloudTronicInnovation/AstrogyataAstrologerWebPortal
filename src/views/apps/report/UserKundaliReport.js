@@ -23,9 +23,19 @@ const UserKundaliReport = (props) => {
 
   const [lagnaSvg, setlagnaSvg] = useState("");
   const [moonSvg, setmoonSvg] = useState("");
+  const [sunSvg, setsunSvg] = useState("");
+  const [chalitSvg, setchalitSvg] = useState("");
+  const [horaSvg, sethoraSvg] = useState("");
+  const [dreshkanSvg, setdreshkanSvg] = useState("");
+  const [shashtymshaSvg, setshashtymshasvg] = useState("");
   const [svgVishible, setSvgVisible] = useState({
-    lagnaSvg: false,
+    langnaSvg: false,
     moonSvg: false,
+    sunSvg: false,
+    chalitSvg: false,
+    horaSvg: false,
+    dreshkanSvg: false,
+    shashtymshaSvg: false,
   });
 
   const [reqData, setReqData] = useState();
@@ -82,26 +92,64 @@ const UserKundaliReport = (props) => {
       postRequest(`/v1/basic_panchang`),
       postRequest(`/v1/horo_chart_image/D1`),
       postRequest(`/v1/horo_chart_image/MOON`),
+      postRequest(`/v1/horo_chart_image/SUN`),
+      postRequest(`/v1/horo_chart_image/chalit`),
+      postRequest(`/v1/horo_chart_image/D2`),
+      postRequest(`/v1/horo_chart_image/D3`),
+      postRequest(`/v1/horo_chart_image/D60`),
     ];
 
-    Promise.all(requests)
-      .then(([panchangRes, lagnaRes, moonRes]) => {
+    Promise.all(requests).then(
+      ([panchangRes, lagnaRes, moonRes, sunRes, chalitRes, D2Res, D3Res, D60Res]) => {
         setBasicPanchang(panchangRes.data);
-        if (Object.keys(lagnaRes?.data).length > 0) {
-          setSvgVisible({ ...svgVishible, lagnaSvg: true });
-          setlagnaSvg(lagnaRes.data.svg);
-        }
 
-        if (Object.keys(moonRes?.data).length > 0) {
-          setSvgVisible({ lagnaSvg: true, moonSvg: true });
-          setmoonSvg(moonRes.data.svg);
-        }
+        const responseMap = [
+          { key: "lagnaSvg", res: lagnaRes },
+          { key: "moonSvg", res: moonRes },
+          { key: "sunSvg", res: sunRes },
+          { key: "chalitSvg", res: chalitRes },
+          { key: "horaSvg", res: D2Res },
+          { key: "dreshkanSvg", res: D3Res },
+          { key: "shashtymshaSvg", res: D60Res },
+        ];
+
+        let newSvgVisible = { ...svgVishible };
+
+        responseMap.forEach(({ key, res }) => {
+          if (res?.data && Object.keys(res.data).length > 0) {
+            newSvgVisible[key] = true;
+
+            switch (key) {
+              case "lagnaSvg":
+                setlagnaSvg(res.data.svg);
+                break;
+              case "moonSvg":
+                setmoonSvg(res.data.svg);
+                break;
+              case "sunSvg":
+                setsunSvg(res.data.svg);
+                break;
+              case "chalitSvg":
+                setchalitSvg(res.data.svg);
+                break;
+              case "horaSvg":
+                sethoraSvg(res.data.svg);
+                break;
+              case "dreshkanSvg":
+                setdreshkanSvg(res.data.svg);
+                break;
+              case "shashtymshaSvg":
+                setshashtymshasvg(res.data.svg);
+                break;
+              default:
+                break;
+            }
+          }
+        });
+        setSvgVisible(newSvgVisible);
         setReqData(reqPanchangData);
-      })
-      .catch((err) => {
-        setBasicPanchang({});
-        console.log(err);
-      });
+      }
+    );
   };
 
   const fetchPlanetaryPosition = () => {
@@ -496,6 +544,67 @@ const UserKundaliReport = (props) => {
                         {ReactHtmlParser(moonSvg)}
                       </Col>
                     )}
+                     {/* SUN CHART  */}
+                     {svgVishible?.sunSvg && (
+                              <Col
+                                md="6"
+                                className="panchang-chart mt-2 text-center"
+                              >
+                                <h6 className="fw-semibold text-center">
+                                  Sun Chart
+                                </h6>
+                                {ReactHtmlParser(sunSvg)}
+                              </Col>
+                            )}
+                            {/* CHALIT CHART  */}
+                            {/* {svgVishible?.chalitSvg && (
+                              <Col
+                              md="6"
+                              className="panchang-chart mt-2 text-center"
+                              >
+                                <h6 className="fw-semibold text-center">
+                                  Chalit Chart
+                                </h6>
+                                {ReactHtmlParser(chalitSvg)}
+                              </Col>
+                              )} */}
+
+                            {/* HORA CHART  */}
+                            {svgVishible?.horaSvg && (
+                              <Col
+                                md="6"
+                                className="panchang-chart mt-2 text-center"
+                              >
+                                <h6 className="fw-semibold text-center">
+                                Hora(Wealth / Income Chart)
+                                </h6>
+                                {ReactHtmlParser(horaSvg)}
+                              </Col>
+                            )}
+                            {/* DRESHKAN CHART  */}
+                            {svgVishible?.dreshkanSvg && (
+                              <Col
+                                md="6"
+                                className="panchang-chart mt-2 text-center"
+                              >
+                                <h6 className="fw-semibold text-center">
+                                Drekkana(Relationship with siblings)
+                                </h6>
+                                {ReactHtmlParser(dreshkanSvg)}
+                              </Col>
+                            )}
+                            {/* SHASHTYMSHA CHART  */}
+                            {svgVishible?.shashtymshaSvg && (
+                              <Col
+                              md="6"
+                              className="panchang-chart mt-2 text-center"
+                              >
+                                <h6 className="fw-semibold text-center">
+                                Shastiamsa(Summary of charts)
+                                </h6>
+                                {ReactHtmlParser(shashtymshaSvg)}
+                              </Col>
+                              )}
                     {!svgVishible?.moonSvg && (
                       <Col md="6" className="text-center my-4">
                         No Data Found
