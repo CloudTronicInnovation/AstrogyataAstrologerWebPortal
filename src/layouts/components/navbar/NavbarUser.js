@@ -421,7 +421,7 @@ const NavbarUser = () => {
             Mark {newStatus && newStatus}
           </Button>
         </li> */}
-        <li>
+        {/* <li>
           <select
             //  onChange={(e) => LanguageSwitcher(e.target.value)}
             name="language"
@@ -442,9 +442,30 @@ const NavbarUser = () => {
             }}
           >
             <option value="en">Language</option>
-            <option value="hi">हिंदी</option>
+            <option value="hi">हिंदी</option> 
             <option value="en">English</option>
           </select>
+        </li> */}
+        <li>
+          <Button 
+          onClick={(e) => handleNavigation(e, "/#/extensions/i18n")} 
+          style={{
+            padding: "0.5rem",
+            borderRadius: "5px",
+            border: "1px solid #ccc",
+            backgroundColor: "#f9f9f9",
+            color: "#333",
+            fontSize: "0.7rem",
+            fontFamily: "Arial, sans-serif",
+            width: "80px",
+            height: "28px",
+            position: "relative",
+            right: "15%",
+            top:"22%"
+          }}
+          >
+            Language
+          </Button>
         </li>
         <li>
           <Button

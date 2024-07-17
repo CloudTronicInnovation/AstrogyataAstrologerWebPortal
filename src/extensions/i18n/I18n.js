@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import {
   Row,
   Col,
@@ -6,12 +6,13 @@ import {
   CardHeader,
   CardTitle,
   CardBody,
-  CardText
-} from "reactstrap"
-import ExtensionsHeader from "../extensionsHeader"
-import Radio from "../../components/@vuexy/radio/RadioVuexy"
-import { IntlContext } from "../../utility/context/Internationalization"
-import { FormattedMessage } from "react-intl"
+  CardText,
+} from "reactstrap";
+import ExtensionsHeader from "../extensionsHeader";
+import Radio from "../../components/@vuexy/radio/RadioVuexy";
+import { IntlContext } from "../../utility/context/Internationalization";
+import { FormattedMessage } from "react-intl";
+
 class I18nExtension extends React.Component {
   render() {
     return (
@@ -22,68 +23,93 @@ class I18nExtension extends React.Component {
           link="https://www.npmjs.com/package/react-intl"
         />
         <IntlContext.Consumer>
-          {context => {
+          {(context) => {
             return (
               <Row>
                 <Col sm="12">
                   <Card>
                     <CardHeader>
-                      <CardTitle>Change Locale</CardTitle>
+                      <CardTitle>
+                        <FormattedMessage
+                          id="change.locale"
+                          defaultMessage="Change Locale"
+                        />
+                      </CardTitle>
                     </CardHeader>
                     <CardBody>
                       <div className="language-options">
                         <Radio
                           name="i18n-lang-radio"
                           onClick={() => {
-                            context.switchLanguage("en")
+                            context.switchLanguage("en");
                           }}
-                          label="English"
-                          className="mb-1"
-                          defaultChecked={
-                            context.state.locale === "en" ? true : false
+                          label={
+                            <FormattedMessage
+                              id="language.english"
+                              defaultMessage="English"
+                            />
                           }
+                          className="mb-1"
+                          defaultChecked={context.state.locale === "en"}
                         />
                         <Radio
                           name="i18n-lang-radio"
                           onClick={() => {
-                            context.switchLanguage("fr")
+                            context.switchLanguage("fr");
                           }}
-                          label="French"
-                          className="mb-1"
-                          defaultChecked={
-                            context.state.locale === "fr" ? true : false
+                          label={
+                            <FormattedMessage
+                              id="language.french"
+                              defaultMessage="French"
+                            />
                           }
+                          className="mb-1"
+                          defaultChecked={context.state.locale === "fr"}
                         />
                         <Radio
                           name="i18n-lang-radio"
                           onClick={() => {
-                            context.switchLanguage("de")
+                            context.switchLanguage("de");
                           }}
-                          label="German"
-                          className="mb-1"
-                          defaultChecked={
-                            context.state.locale === "de" ? true : false
+                          label={
+                            <FormattedMessage
+                              id="language.german"
+                              defaultMessage="German"
+                            />
                           }
+                          className="mb-1"
+                          defaultChecked={context.state.locale === "de"}
                         />
                         <Radio
                           name="i18n-lang-radio"
                           onClick={() => {
-                            context.switchLanguage("pt")
+                            context.switchLanguage("pt");
                           }}
-                          label="Portuguese"
-                          className="mb-1"
-                          defaultChecked={
-                            context.state.locale === "pt" ? true : false
+                          label={
+                            <FormattedMessage
+                              id="language.portuguese"
+                              defaultMessage="Portuguese"
+                            />
                           }
+                          className="mb-1"
+                          defaultChecked={context.state.locale === "pt"}
                         />
                       </div>
                       <Card className="border mt-3">
                         <CardHeader>
-                          <CardTitle>Card Title</CardTitle>
+                          <CardTitle>
+                            <FormattedMessage
+                              id="card.title"
+                              defaultMessage="Card Title"
+                            />
+                          </CardTitle>
                         </CardHeader>
                         <CardBody>
                           <CardText>
-                            <FormattedMessage id="text" />
+                            <FormattedMessage
+                              id="text"
+                              defaultMessage="This is a sample text."
+                            />
                           </CardText>
                         </CardBody>
                       </Card>
@@ -91,12 +117,12 @@ class I18nExtension extends React.Component {
                   </Card>
                 </Col>
               </Row>
-            )
+            );
           }}
         </IntlContext.Consumer>
       </React.Fragment>
-    )
+    );
   }
 }
 
-export default I18nExtension
+export default I18nExtension;
