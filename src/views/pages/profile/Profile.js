@@ -1,4 +1,5 @@
 import React from "react";
+import { FormattedMessage } from 'react-intl';
 import {
   Row,
   Col,
@@ -57,6 +58,7 @@ class Profile extends React.Component {
     axiosConfig
       .get(`/admin/getoneAstro/${astroId}`)
       .then((response) => {
+        
         // console.log(response.data.data);
         this.setState({
           data: response.data.data,
@@ -140,9 +142,9 @@ class Profile extends React.Component {
     return (
       <React.Fragment>
         <Breadcrumbs
-          breadCrumbTitle="Profile"
-          breadCrumbParent="Pages"
-          breadCrumbActive="Profile"
+          breadCrumbTitle={ <FormattedMessage id="Profile" defaultMessage="Profile"/>}
+          breadCrumbParent={ <FormattedMessage id="Pages" defaultMessage="Pages"/>}
+          breadCrumbActive={ <FormattedMessage id="Profile" defaultMessage="Profile"/>}
         />
         <div id="user-profile">
           <Row className="m-0 justify-content-center">
@@ -156,76 +158,76 @@ class Profile extends React.Component {
                   />
                   <ul className="lst-1">
                     <li className="lst-2">
-                      Name:
+                    <FormattedMessage id="Name" defaultMessage="Name"/>:
                       <span className="lst-3">{this.state.data.fullname}</span>
                     </li>
                     <li className="lst-2">
-                      Mobile:
+                      <FormattedMessage id="MOBILE_NO." defaultMessage="MOBILE_NO."/>:
                       <span className="lst-3">{this.state.data.mobile}</span>
                     </li>
                     <li className="lst-2">
-                      Email:
+                    <FormattedMessage id="Email" defaultMessage="Email"/>:
                       <span className="lst-3">{this.state.data.email}</span>
                     </li>
                     <li className="lst-2">
-                      CallRate:
+                    <FormattedMessage id="CallRate" defaultMessage="Call Rate"/>:
                       <span className="lst-3">
                         Rs {this.state.data.callCharge}
                       </span>
                     </li>
                     <li className="lst-2">
-                      All Skills:
+                    <FormattedMessage id="All Skills" defaultMessage="All Skills"/>:
                       <span className="lst-3">
                         {this.state.data.all_skills}
                       </span>
                     </li>
                     <li className="lst-2">
-                      Calling Status:
+                    <FormattedMessage id="Calling Status" defaultMessage="Calling Status"/>:
                       <span className="lst-3">
                         {this.state.data.callingStatus}
                       </span>
                     </li>
                     <li className="lst-2">
-                      DOB:
+                    <FormattedMessage id="Birth Time" defaultMessage="Birth Time"/>:
                       <span className="lst-3">{this.state.data.dob}</span>
                     </li>
                     <li className="lst-2">
-                      Experience:
+                    <FormattedMessage id="Experience" defaultMessage="Experience"/>:
                       <span className="lst-3">
                         {this.state.data.exp_in_years}Year
                       </span>
                     </li>
                     <li className="lst-2">
-                      Gender:
+                    <FormattedMessage id="Gender" defaultMessage="Gender"/>:
                       <span className="lst-3">{this.state.data.gender}</span>
                     </li>
                     <li className="lst-2">
-                      Higher Qualification:
+                    <FormattedMessage id="Higher Qualification" defaultMessage="Higher Qualification"/>:
                       <span className="lst-3">
                         {this.state.data.highest_qualification}
                       </span>
                     </li>
                     <li className="lst-2">
-                      School/College:
+                    <FormattedMessage id="School/College" defaultMessage="School/College"/>:
                       <span className="lst-3">
                         {this.state.data.clg_scl_name}
                       </span>
                     </li>
-                    <li className="lst-2">
-                      Degree Diploma:
+                    {/* <li className="lst-2">
+                    <FormattedMessage id="Degree Diploma" defaultMessage="Degree Diploma"/>:
                       <span className="lst-3">
                         {this.state.data.degree_deploma}
                       </span>
-                    </li>
+                    </li> */}
                     <li className="lst-2">
-                      City:
+                    <FormattedMessage id="CITY" defaultMessage="City"/>:
                       <span className="lst-3">{this.state.data.crnt_city}</span>
                     </li>
                     <li className="lst-2">
-                      Language:
+                    <FormattedMessage id="Language" defaultMessage="Language"/>:
                       <span className="lst-3">{this.state.data.language}</span>
                     </li>
-                    <li className="lst-2">
+                    {/* <li className="lst-2">
                       Maximum Earning:
                       <span className="lst-3">
                         Rs{this.state.data.max_earning_expe}
@@ -244,49 +246,49 @@ class Profile extends React.Component {
                     <li className="lst-2">
                       Minimum Time:
                       <span className="lst-3">{this.state.data.min_tym}</span>
-                    </li>
+                    </li> */}
                     <li className="lst-2">
-                      Available Amount:
+                    <FormattedMessage id="Available Amount" defaultMessage="Available Amount"/>:
                       <span className="lst-3">
                         {this.state.data.availableAmt}
                       </span>
                     </li>
                     <li className="lst-2">
-                      Approved Status:
+                    <FormattedMessage id="Approved Status" defaultMessage="Approved Status"/>:
                       <span className="lst-3">
                         {this.state.data.approvedstatus}
                       </span>
                     </li>
                     <li className="lst-2">
-                      Avarage Rating:
+                    <FormattedMessage id="Average Rating" defaultMessage="Avarage Rating"/>:
                       <span className="lst-3">
                         {this.state.data.avg_rating}
                       </span>
                     </li>
                     <li className="lst-2">
-                      Facebook Link:
+                       <FormattedMessage id="Facebook" defaultMessage="Facebook Link"/>:
                       <span className="lst-3">{this.state.data.fb_link}</span>
                     </li>
                     <li className="lst-2">
-                      Instagram Link:
+                    <FormattedMessage id="Instagram" defaultMessage="Instagram Link"/>:
                       <span className="lst-3">
                         {this.state.data.insta_link}
                       </span>
                     </li>
                     <li className="lst-2">
-                      LinkedIn Link:
+                    <FormattedMessage id="LinkedIn" defaultMessage="LinkedIn Link"/>:
                       <span className="lst-3">
                         {this.state.data.linkedln_link}
                       </span>
                     </li>
                     <li className="lst-2">
-                      Youtube Link:
+                    <FormattedMessage id="Youtube" defaultMessage="Youtube Link"/>:
                       <span className="lst-3">
                         {this.state.data.youtube_link}
                       </span>
                     </li>
                     <li className="lst-2">
-                      Other Online PlateForm:
+                      <FormattedMessage id="Other Online Platform" defaultMessage="Other Online PlateForm"/>:
                       <span className="lst-3">
                         {this.state.data.other_online_platform}
                       </span>
@@ -306,12 +308,12 @@ class Profile extends React.Component {
                 <Form className="m-1" onSubmit={this.submitHandler}>
                   <div className="st-2">
                     <CardTitle>
-                      <h4 className="mb-3">Edit Profile</h4>
+                      <h4 className="mb-3"> <FormattedMessage id="edit.profile" defaultMessage="Edit Profile"/></h4>
                       <Col></Col>
                     </CardTitle>
                     <Row className="m-0">
                       <Col sm="12" className="p-0">
-                        <Label>Name</Label>
+                        <Label><FormattedMessage id="Name" defaultMessage="Name"/></Label>
                         <Input
                           type="text"
                           name="fullname"
@@ -320,7 +322,7 @@ class Profile extends React.Component {
                           onChange={this.changeHandler}
                         />
                         <br></br>
-                        <Label>Email</Label>
+                        <Label><FormattedMessage id="Email" defaultMessage="Email"/></Label>
                         <Input
                           type="email"
                           name="email"
@@ -330,7 +332,7 @@ class Profile extends React.Component {
                           onChange={this.changeHandler}
                         />
                         <br></br>
-                        <Label>Mobile No.</Label>
+                        <Label><FormattedMessage id="MOBILE_NO." defaultMessage="Mobile"/></Label>
 
                         <div className="form-group mtb-10">
                           <PhoneInput
@@ -350,7 +352,7 @@ class Profile extends React.Component {
                           ) : null}
                         </div>
 
-                        <Label>Call Rate</Label>
+                        <Label><FormattedMessage id="CallRate" defaultMessage="Call Rate"/></Label>
                         <Input
                           type="number"
                           name="callCharge"
@@ -359,7 +361,7 @@ class Profile extends React.Component {
                           onChange={this.changeHandler}
                         />
                         <br></br>
-                        <Label>All Skills</Label>
+                        <Label><FormattedMessage id="All Skills" defaultMessage="All Skills"/></Label>
                         <Input
                           type="text"
                           name="all_skills"
@@ -382,7 +384,7 @@ class Profile extends React.Component {
                           <option value="Wait">Wait</option>
                         </select>
                         <br></br> */}
-                        <Label>Experience In Year</Label>
+                        <Label><FormattedMessage id="Experience" defaultMessage="Experience"/></Label>
                         <Input
                           type="number"
                           name="exp_in_years"
@@ -391,7 +393,7 @@ class Profile extends React.Component {
                           onChange={this.changeHandler}
                         />
                         <br></br>
-                        <Label>Highest Qualification</Label>
+                        <Label><FormattedMessage id="Higher Qualification" defaultMessage="Highest Qualification"/></Label>
                         <Input
                           type="text"
                           name="highest_qualification"
@@ -400,7 +402,7 @@ class Profile extends React.Component {
                           onChange={this.changeHandler}
                         />
                         <br></br>
-                        <Label>Maximum Time</Label>
+                        {/* <Label>Maximum Time</Label>
                         <Input
                           type="number"
                           name="max_tym"
@@ -408,8 +410,8 @@ class Profile extends React.Component {
                           value={this.state.max_tym}
                           onChange={this.changeHandler}
                         />
-                        <br></br>
-                        <Label>Language</Label>
+                        <br></br> */}
+                        <Label><FormattedMessage id="Language" defaultMessage="Language"/></Label>
                         <Input
                           type="text"
                           name="language"
@@ -417,7 +419,7 @@ class Profile extends React.Component {
                           value={this.state.language}
                           onChange={this.changeHandler}
                         />
-                        <br></br>
+                        {/* <br></br>
                         <Label>Minimum Time</Label>
                         <Input
                           type="number"
@@ -425,9 +427,9 @@ class Profile extends React.Component {
                           placeholder="Minimum  Time"
                           value={this.state.min_tym}
                           onChange={this.changeHandler}
-                        />
+                        /> */}
                         <br></br>
-                        <Label>User Image</Label>
+                        <Label><FormattedMessage id="USER_IMAGE" defaultMessage="User Image"/></Label>
                         <Input
                           className="form-control"
                           type="file"
@@ -438,13 +440,13 @@ class Profile extends React.Component {
                         <CheckBoxesVuexy
                           color="primary"
                           icon={<Check className="vx-icon" size={16} />}
-                          label=" I accept the terms & conditions."
+                          label={<FormattedMessage id="I accept the terms & conditions." defaultMessage="I accept the terms & conditions."/>}
                           defaultChecked={true}
                         />
                         <br></br>
                         <div className="d-flex justify-content-between">
                           <Button.Ripple color="primary" type="submit">
-                            Submit
+                          <FormattedMessage id="Submit" defaultMessage="Submit"/>
                           </Button.Ripple>
                         </div>
                         {/* </Form> */}

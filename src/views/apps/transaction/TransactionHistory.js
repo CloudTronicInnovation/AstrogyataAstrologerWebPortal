@@ -1,4 +1,5 @@
 import React from "react";
+import { FormattedMessage } from 'react-intl';
 import {
   Card,
   CardBody,
@@ -224,7 +225,7 @@ class TransactionHistory extends React.Component {
             <Row className="m-2">
               <Col>
                 <h1 sm="6" className="float-left">
-                  Transaction History List
+                <FormattedMessage id="Transaction History" defaultMessage="Transaction History"/>
                 </h1>
               </Col>
             </Row>
@@ -291,7 +292,7 @@ class TransactionHistory extends React.Component {
                           color="primary"
                           onClick={() => this.gridApi.exportDataAsCsv()}
                         >
-                          Export as CSV
+                          <FormattedMessage id="Export as CSV" defaultMessage="Export as CSV"/>
                         </Button.Ripple>
                       </div>
                     </div>

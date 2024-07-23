@@ -1,5 +1,6 @@
 /* eslint-disable array-callback-return */
 import React from "react";
+import { FormattedMessage } from 'react-intl';
 import {
   Card,
   CardBody,
@@ -187,9 +188,9 @@ class ChatReport extends React.Component {
     return (
       <div>
         <Breadcrumbs
-          breadCrumbTitle="Chat Report"
-          breadCrumbParent="Home"
-          breadCrumbActive="Chat Report"
+          breadCrumbTitle={ <FormattedMessage id="Chat Report" defaultMessage="Chat Report"/>}
+          breadCrumbParent={ <FormattedMessage id="Home" defaultMessage="Home"/>}
+          breadCrumbActive={ <FormattedMessage id="Chat Report" defaultMessage="Chat Report"/>}
         />
         <Row className="app-user-list">
           <Col sm="12"></Col>
@@ -198,7 +199,7 @@ class ChatReport extends React.Component {
               <Row className="m-2">
                 <Col>
                   <h1 sm="6" className="float-left">
-                    Chat Reports
+                  <FormattedMessage id="Chat Report" defaultMessage="Chat Report"/>
                   </h1>
                 </Col>
               </Row>
@@ -267,7 +268,7 @@ class ChatReport extends React.Component {
                             color="primary"
                             onClick={() => this.gridApi.exportDataAsCsv()}
                           >
-                            Export as CSV
+                            <FormattedMessage id="Export as CSV" defaultMessage="Export as CSV"/>
                           </Button.Ripple>
                         </div>
                       </div>

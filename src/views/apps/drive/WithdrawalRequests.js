@@ -347,7 +347,7 @@ import {
   DropdownItem,
   DropdownToggle,
 } from "reactstrap";
-
+import { FormattedMessage } from 'react-intl';
 import "../../../assets/scss/plugins/tables/_agGridStyleOverride.scss";
 import { Eye, Edit, Trash2, ChevronDown } from "react-feather";
 import { ContextLayout } from "../../../utility/context/Layout";
@@ -528,9 +528,9 @@ class WithdrawalRequests extends React.Component {
       (
         <div>
           <Breadcrumbs
-            breadCrumbTitle="Withdrawal Request"
-            breadCrumbParent="Home"
-            breadCrumbActive="Withdrawal Request Report"
+            breadCrumbTitle={ <FormattedMessage id="Withdrawal Requests" defaultMessage="Withdrawal Requests"/>}
+            breadCrumbParent={ <FormattedMessage id="Home" defaultMessage="Home"/>}
+            breadCrumbActive={<FormattedMessage id="Withdrawal Request Report" defaultMessage="Withdrawal Request Report"/>}
           />
 
           <Row className="app-user-list">
@@ -540,7 +540,7 @@ class WithdrawalRequests extends React.Component {
                 <Row className="m-2">
                   <Col>
                     <h1 sm="6" className="float-left">
-                      Withdrawal Request
+                    <FormattedMessage id="Withdrawal Request Report" defaultMessage="Withdrawal Request Report"/>
                     </h1>
                   </Col>
                   {/* <Col>
@@ -623,7 +623,7 @@ class WithdrawalRequests extends React.Component {
                               color="primary"
                               onClick={() => this.gridApi.exportDataAsCsv()}
                             >
-                              Export as CSV
+                             <FormattedMessage id="Export as CSV" defaultMessage="Export as CSV"/>
                             </Button.Ripple>
                           </div>
                         </div>

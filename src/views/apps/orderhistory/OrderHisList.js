@@ -1,4 +1,5 @@
 import React from "react";
+import { FormattedMessage } from 'react-intl';
 import {
   Card,
   CardBody,
@@ -236,9 +237,9 @@ class OrderHisList extends React.Component {
       // console.log(rowData),
       <div>
         <Breadcrumbs
-          breadCrumbTitle="Order History"
-          breadCrumbParent="Home"
-          breadCrumbActive="Order History"
+          breadCrumbTitle={ <FormattedMessage id="Order History" defaultMessage="Order History"/>}
+          breadCrumbParent={ <FormattedMessage id="Home" defaultMessage="Home"/>}
+          breadCrumbActive={ <FormattedMessage id="Order History" defaultMessage="Order History"/>}
         />
 
         <Row className="app-user-list">
@@ -248,7 +249,7 @@ class OrderHisList extends React.Component {
               <Row className="m-2">
                 <Col>
                   <h1 sm="6" className="float-left">
-                    All Orders
+                  <FormattedMessage id="All Orders" defaultMessage="All Orders"/>
                   </h1>
                 </Col>
                 {/* <Col>
@@ -331,7 +332,7 @@ class OrderHisList extends React.Component {
                             color="primary"
                             onClick={() => this.gridApi.exportDataAsCsv()}
                           >
-                            Export as CSV
+                             <FormattedMessage id="Export as CSV" defaultMessage="Export as CSV"/>
                           </Button.Ripple>
                         </div>
                       </div>

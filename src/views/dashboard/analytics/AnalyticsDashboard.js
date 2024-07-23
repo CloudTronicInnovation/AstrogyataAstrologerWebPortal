@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col, Card, CardTitle, CardText, CardBody } from "reactstrap";
-
+import { FormattedMessage } from 'react-intl';
 import axiosConfig from "../../../axiosConfig";
 import "../../../assets/scss/pages/dashboard-analytics.scss";
 
@@ -120,7 +120,7 @@ class AnalyticsDashboard extends React.Component {
     return (
       <React.Fragment>
         <Card>
-          <CardTitle className="ast-3">Dashboard</CardTitle>
+          <CardTitle className="ast-3"><FormattedMessage id="Dashboard" defaultMessage="Dashboard" /></CardTitle>
           <hr></hr>
           <CardBody>
             <Row className="match-height">
@@ -130,7 +130,7 @@ class AnalyticsDashboard extends React.Component {
                     <Icon.Users size={40} className="mr-50" />
                   </span> */}
                   <h2 className="ast-2">
-                    Total Request Users
+                  <FormattedMessage id="TOTAL_REQUEST_USERS" defaultMessage="Total Request Users" />
                     <span className="ast-4">{this.state.waitlist}</span>
                   </h2>
                 </div>
@@ -141,7 +141,7 @@ class AnalyticsDashboard extends React.Component {
                     <Icon.PhoneCall size={40} className="mr-50" />
                   </span> */}
                   <h2 className="ast-2">
-                    Total Call History
+                  <FormattedMessage id="TOTAL_CALL_HISTORY" defaultMessage="Total Call History" />
                     <span className="ast-4">{this.state.totalcall}</span>
                   </h2>
                 </div>
@@ -152,7 +152,7 @@ class AnalyticsDashboard extends React.Component {
                   <span style={{ fontSize: "50px" }} className="ast-1"></span>
                   <h2 className="ast-2">
                     {" "}
-                    Conversation in Take
+                    <FormattedMessage id="CONVERSATION_IN_TAKE" defaultMessage="Conversation in Take" /> 
                     <span className="ast-4">{this.state.Astrointakeno}</span>
                   </h2>
                 </div>
@@ -162,7 +162,7 @@ class AnalyticsDashboard extends React.Component {
                   <span style={{ fontSize: "50px" }} className="ast-1"></span>
                   <h2 className="ast-2">
                     {" "}
-                    My Uploads
+                    <FormattedMessage id="MY_UPLOADS" defaultMessage="My Uploads" /> 
                     <span className="ast-4">{this.state.Uploads}</span>
                   </h2>
                 </div>
@@ -172,7 +172,7 @@ class AnalyticsDashboard extends React.Component {
                   <span style={{ fontSize: "50px" }} className="ast-1"></span>
                   <h2 className="ast-2">
                     {" "}
-                    Product List
+                    <FormattedMessage id="PRODUCT_LIST" defaultMessage=" Product List" />  
                     <span className="ast-4">{this.state.ProductList}</span>
                   </h2>
                 </div>
@@ -182,7 +182,7 @@ class AnalyticsDashboard extends React.Component {
                   <span style={{ fontSize: "50px" }} className="ast-1"></span>
                   <h2 className="ast-2">
                     {" "}
-                    Wait Queue List
+                    <FormattedMessage id="WAIT_QUEUE_LIST" defaultMessage="Wait Queue List" /> 
                     <span className="ast-4">{this.state.waitqlist}</span>
                   </h2>
                 </div>
@@ -192,7 +192,7 @@ class AnalyticsDashboard extends React.Component {
                   <span style={{ fontSize: "50px" }} className="ast-1"></span>
                   <h2 className="ast-2">
                     {" "}
-                    Users FAQ List
+                    <FormattedMessage id="USER_FAQ" defaultMessage=" Users FAQ List" /> 
                     <span className="ast-4">{this.state.faq}</span>
                   </h2>
                 </div>
@@ -201,7 +201,7 @@ class AnalyticsDashboard extends React.Component {
                 <div className="bg-s mb-3">
                   <span style={{ fontSize: "50px" }} className="ast-1"></span>
                   <h2 className="ast-2">
-                    Users FAQ Answered
+                  <FormattedMessage id="USERS_FAQ_ANSWERED" defaultMessage=" Users FAQ Answered" /> 
                     <span className="ast-4">{this.state.ttlanswered}</span>
                   </h2>
                 </div>
@@ -218,7 +218,7 @@ class AnalyticsDashboard extends React.Component {
                 >
                   <span style={{ fontSize: "50px" }} className="ast-1"></span>
                   <h5 className="ast-2 ast-3" style={{ fontSize: "12px" }}>
-                    Users FAQ NotAnswered
+                  <FormattedMessage id="USERS_FAQ_NOTANSWERED" defaultMessage=" Users FAQ NotAnswered" /> 
                     <span className="ast-4">
                       {this.state.faq - this.state.ttlanswered}
                     </span>
@@ -229,7 +229,7 @@ class AnalyticsDashboard extends React.Component {
                 <div className="bg-s">
                   <span style={{ fontSize: "50px" }} className="ast-1"></span>
                   <h2 className="ast-2">
-                    All Orders
+                  <FormattedMessage id="ALL_ORDERS" defaultMessage="All Orders" /> 
                     <span className="ast-4">{this.state.order}</span>
                   </h2>
                 </div>
@@ -238,7 +238,7 @@ class AnalyticsDashboard extends React.Component {
                 <div className="bg-t">
                   <span style={{ fontSize: "50px" }} className="ast-1"></span>
                   <h2 className="ast-2">
-                    All Ratings
+                  <FormattedMessage id="ALL_RATINGS" defaultMessage="All Ratings" /> 
                     <span className="ast-4">{this.state.Allrating}</span>
                   </h2>
                 </div>
@@ -249,7 +249,7 @@ class AnalyticsDashboard extends React.Component {
                     ₹
                   </span> */}
                   <h2 className="ast-2">
-                    Total Earning
+                  <FormattedMessage id="TOTAL_EARNING" defaultMessage="Total Earning" /> 
                     <span className="ast-4">{this.state.earn}</span>
                   </h2>
                 </div>

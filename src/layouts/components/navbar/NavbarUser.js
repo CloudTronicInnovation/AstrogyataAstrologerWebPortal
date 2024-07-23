@@ -1,9 +1,12 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from "react";
 import Swal from "sweetalert2";
+import { MdCall } from "react-icons/md";
+import { IoChatbox, IoLanguageSharp } from "react-icons/io5";
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import "../../../assets/scss/pages/users.scss";
+import notificationSound from "../../../assets/sound/Notification.mp3";
 import {
   UncontrolledDropdown,
   Dropdown,
@@ -25,6 +28,7 @@ import moment from "moment";
 import swal from "sweetalert";
 import { useDispatch, useSelector } from "react-redux";
 import { chatAcceptStatus } from "../../../redux/actions/chat";
+import { FormattedMessage } from "react-intl";
 
 const handleNavigation = (e, path) => {
   e.preventDefault();
@@ -37,6 +41,8 @@ const NavbarUser = () => {
   const [astronotification, setAstronotification] = useState([]);
   const [newStatus, setNewStatus] = useState("");
   const [viewnotify, setViewnotify] = useState("");
+  const [prevNotiCount, setPrevNotiCount] = useState(0);
+  const [notiCount, setNotiCount] = useState(0);
   const [VideoCount, setVideoCount] = useState("");
   const [videonotify, setVideonotify] = useState([]);
   const [ButtonText, setButtonText] = useState("Online");
@@ -57,7 +63,6 @@ const NavbarUser = () => {
         // console.log(res);
         window.localStorage.clear();
         swal("Logout Successfully");
-        // Append a cache-buster query parameter to the path
         const cacheBusterPath = `${path}?cacheBuster=${new Date().getTime()}`;
         window.location.replace(cacheBusterPath);
       })
@@ -69,19 +74,47 @@ const NavbarUser = () => {
 
   const getAllnotification = async () => {
     const astroId = localStorage.getItem("astroId");
+    const sound = new Audio(notificationSound);
+    try {
+      const res = await axiosConfig.get(`/user/wait_queue_list/${astroId}`);
+      setAstronotification(res.data.data);
+      setViewnotify(res.data.count);
 
-    await axiosConfig
-      .get(`/user/wait_queue_list/${astroId}`)
-      .then((res) => {
-        console.log(res);
-        setAstronotification(res.data.data);
-        setViewnotify(res.data.count);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    // }
+      const lastNotiCount =
+        parseInt(localStorage.getItem("lastNotiCount"), 10) || 0;
+      if (res.data.count > lastNotiCount) {
+        sound.play();
+        console.log("Sound play");
+      }
+      localStorage.setItem("lastNotiCount", res.data.count);
+      setNotiCount(res.data.count);
+    } catch (err) {
+      console.log(err);
+    }
   };
+
+  // const getAllnotification = async () => {
+  //   const astroId = localStorage.getItem("astroId");
+  //   const sound = new Audio(notificationSound);
+
+  //   await axiosConfig
+  //     .get(`/user/wait_queue_list/${astroId}`)
+  //     .then((res) => {
+  //       // console.log(res);
+  //       setAstronotification(res.data.data);
+  //       setViewnotify(res.data.count);
+       
+  //       if(notiCount != res.data.count){
+  //         sound.play();
+  //         setNotiCount(res.data.count);
+  //       }
+  //     })
+    
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
+
   const newgetAllnotification = async () => {
     const astroId = localStorage.getItem("astroId");
     await axiosConfig
@@ -181,10 +214,11 @@ const NavbarUser = () => {
             .then((res) => {
               console.log(res.data);
               if (res.data.message === "success") {
-                // Toggle the ButtonText based on the current status
-                setButtonText(ButtonText === "Online" ? "Offline" : "Online");
-                if (ButtonText === "Offline") {
-                  // Show notification if status is set to "Online"
+                const newStatus = ButtonText === "Online" ? "Offline" : "Online";
+                setButtonText(newStatus);
+                // Save in localStorage
+                localStorage.setItem('status', newStatus);
+                if (newStatus === "Online") {
                   Swal.fire({
                     icon: "success",
                     title: "Status is Online",
@@ -211,20 +245,60 @@ const NavbarUser = () => {
       });
   };
 
-  const handleshowChangeMode = (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    // For Calling status
+    const savedStatus = localStorage.getItem('callingStatus');
+    if (savedStatus) {
+      setNewStatus(savedStatus);
+      // For Chat Status
+    const chatstatus = localStorage.getItem('status') || 'Online'; // Default to 'Online' if not found
+    setButtonText(chatstatus);
+    }
+  }, []);
+
+  const handleStatusChange = (status) => {
+    setNewStatus(status);
     let astroid = localStorage.getItem("astroId");
     axiosConfig
-      .post(`/user/status_change/${astroid}`, {
-        callingStatus: newStatus,
-      })
-      .then((res) => {
-        console.log("statusChange", res.data.data);
-        swal("Status changed Successfully");
-      })
-      .catch((err) => {
-        console.log(err);
+    .post(`/user/status_change/${astroid}`, {
+      callingStatus: status,
+    })
+    .then((res) => {
+      console.log("statusChange", res.data.data);
+      localStorage.setItem('callingStatus', status);
+      Swal.fire({
+        title: 'Status Changed',
+        text: 'Status changed successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK'
       });
+    })
+    .catch((err) => {
+      console.log(err);
+      Swal.fire({
+        title: 'Error',
+        text: 'An error occurred while changing the status.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+    });
+  };
+  const handleshowChangeMode = () => {
+    Swal.fire({
+      title: 'Calling Status',
+      html: `
+     
+        <button id="Online" class="swal2-styled swal2-confirm">Online</button>
+        <button id="Offline" class="swal2-styled swal2-confirm">Offline</button>
+      `,
+      showCancelButton: true,
+      showConfirmButton: false,
+      didOpen: () => {
+        // document.getElementById('Wait').addEventListener('click', () => handleStatusChange('Wait'));
+        document.getElementById('Online').addEventListener('click', () => handleStatusChange('Online'));
+        document.getElementById('Offline').addEventListener('click', () => handleStatusChange('Offline'));
+      }
+    });
   };
 
   const handleStatus = (data) => {
@@ -403,24 +477,32 @@ const NavbarUser = () => {
   return (
     <div className="">
       <ul className="nav navbar-nav navbar-nav-user float-right">
-        {/* <li>
-          <select
-            className="mt-1"
-            onChange={(e) => setNewStatus(e.target.value)}
-          >
-            <option value="Available">--Select--</option>
-            <option value="Wait">Wait</option>
-            <option value="Available">Available</option>
-            <option value="Busy">Busy</option>
-          </select>
-          <Button
-            onClick={handleshowChangeMode}
-            size="sm"
-            className="ml-1  btn btn-success "
-          >
-            Mark {newStatus && newStatus}
-          </Button>
-        </li> */}
+      <li>
+      <Button
+        onClick={handleshowChangeMode}
+        size="sm"
+        className="ml-1 btn btn-success"
+        style={{
+          padding: "0.5rem",
+          borderRadius: "5px",
+          border: "1px solid #ccc",
+          backgroundColor: "#f9f9f9",
+          color: "#333",
+          fontSize: "0.8rem",
+          fontFamily: "Arial, sans-serif",
+          width: "83px", 
+          height: "38px",
+          position: "absolute",
+          top: "23%",
+          right: "26%",
+        }}
+      >
+               <MdCall /> {newStatus || 'Status'} 
+      </Button>
+    </li>
+
+
+        
         {/* <li>
           <select
             //  onChange={(e) => LanguageSwitcher(e.target.value)}
@@ -447,24 +529,24 @@ const NavbarUser = () => {
           </select>
         </li> */}
         <li>
-          <Button 
-          onClick={(e) => handleNavigation(e, "/#/extensions/i18n")} 
-          style={{
-            padding: "0.5rem",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-            backgroundColor: "#f9f9f9",
-            color: "#333",
-            fontSize: "0.7rem",
-            fontFamily: "Arial, sans-serif",
-            width: "80px",
-            height: "28px",
-            position: "relative",
-            right: "15%",
-            top:"22%"
-          }}
+          <Button
+            onClick={(e) => handleNavigation(e, "/#/extensions/i18n")}
+            style={{
+              padding: "0.5rem",
+              borderRadius: "5px",
+              border: "1px solid #ccc",
+              backgroundColor: "#f9f9f9",
+              color: "#333",
+              fontSize: "0.8rem",
+              fontFamily: "Arial, sans-serif",
+              width: "83px", 
+              height: "38px",
+              position: "relative",
+              right: "130%",
+              top: "23%",
+            }}
           >
-            Language
+            <IoLanguageSharp/> <FormattedMessage id="Language" defaultMessage="Language" />
           </Button>
         </li>
         <li>
@@ -478,13 +560,13 @@ const NavbarUser = () => {
               border: "1px solid #ccc",
               backgroundColor: "#f9f9f9",
               color: "#333",
-              fontSize: "0.7rem",
+              fontSize: "0.8rem",
               fontFamily: "Arial, sans-serif",
-              width: "80px", // You can adjust the width as needed
-              height: "28px",
+              width: "83px", 
+              height: "38px",
             }}
           >
-            {ButtonText && ButtonText}
+            <IoChatbox /> {ButtonText}
           </Button>
         </li>
 
@@ -510,7 +592,13 @@ const NavbarUser = () => {
             <li className="dropdown-menu-header">
               <div className="dropdown-header mt-0">
                 <h3 className="text-white">{viewnotify + VideoCount}</h3>
-                <span className="notification-title"> Notifications</span>
+                <span className="notification-title">
+                  {" "}
+                  <FormattedMessage
+                    id="notifications"
+                    defaultMessage="Notifications"
+                  />{" "}
+                </span>
               </div>
             </li>
             <PerfectScrollbar
@@ -540,8 +628,11 @@ const NavbarUser = () => {
                       </Media>
                       <small className="notification-text">
                         <p className="mb-0">
-                          Request for:
-                          <span>{data.type ? data.type : "Voice Call"}</span>
+                          <FormattedMessage
+                            id="request.for"
+                            defaultMessage="Request for"
+                          />{" "}
+                          :<span>{data.type ? data.type : "Voice Call"}</span>
                         </p>
                       </small>
                       <div className="bottom-tag">
@@ -549,13 +640,19 @@ const NavbarUser = () => {
                           onClick={() => handleStatus(data)}
                           className="success media-heading gt-1"
                         >
-                          Accept
+                          <FormattedMessage
+                            id="accept"
+                            defaultMessage="Accept"
+                          />
                         </Button>
                         <Button
                           onClick={() => handledelStatus(data)}
                           className="denger media-heading gt-2"
                         >
-                          Reject
+                          <FormattedMessage
+                            id="reject"
+                            defaultMessage="Reject"
+                          />
                         </Button>
                       </div>
                     </Media>
@@ -590,7 +687,11 @@ const NavbarUser = () => {
                       </Media>
                       <small className="notification-text">
                         <p className="mb-0">
-                          Request for: <span>{data.type} Call</span>
+                          <FormattedMessage
+                            id="request.for"
+                            defaultMessage="Request for"
+                          />{" "}
+                          : <span>{data.type} Call</span>
                         </p>
                       </small>
                       <div className="bottom-tag">
@@ -598,13 +699,19 @@ const NavbarUser = () => {
                           onClick={() => handleVideoStatus(data)}
                           className="success media-heading gt-1"
                         >
-                          Accept
+                          <FormattedMessage
+                            id="accept"
+                            defaultMessage="Accept"
+                          />
                         </Button>
                         <Button
                           onClick={() => handledelStatus(data)}
                           className="denger media-heading gt-2"
                         >
-                          Reject
+                          <FormattedMessage
+                            id="reject"
+                            defaultMessage="Reject"
+                          />
                         </Button>
                       </div>
                     </Media>
@@ -622,7 +729,10 @@ const NavbarUser = () => {
             </PerfectScrollbar>
             <li className="dropdown-menu-footer">
               <DropdownItem tag="a" className="p-1 text-center">
-                Read all notifications
+                <FormattedMessage
+                  id="read.all.notifications"
+                  defaultMessage="Read all notifications!"
+                />
               </DropdownItem>
             </li>
           </DropdownMenu>
@@ -652,7 +762,12 @@ const NavbarUser = () => {
               onClick={(e) => handleNavigation(e, "/#/pages/profile")}
             >
               <Icon.User size={14} className="mr-50" />
-              <span className="align-middle">Edit Profile</span>
+              <span className="align-middle">
+                <FormattedMessage
+                  id="edit.profile"
+                  defaultMessage="Edit Profile"
+                />
+              </span>
             </DropdownItem>
 
             <DropdownItem divider />
@@ -663,7 +778,9 @@ const NavbarUser = () => {
                   onClick={(e) => handleofflineAstro(e, "/#/pages/login")}
                 >
                   <Icon.Power size={14} className="mr-50" />
-                  <span className="align-middle">LogOut</span>
+                  <span className="align-middle">
+                    <FormattedMessage id="logout" defaultMessage="LogOut" />
+                  </span>
                 </DropdownItem>
               )}
             />

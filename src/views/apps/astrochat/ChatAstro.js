@@ -8,6 +8,7 @@ import axiosConfig from "../../../axiosConfig";
 import Swal from "sweetalert2";
 import { FaArrowAltCircleRight } from "react-icons/fa";
 import { chatAcceptStatus } from "../../../redux/actions/chat";
+import { FormattedMessage } from 'react-intl';
 import { connect } from "react-redux";
 
 class ChatApp extends PureComponent {
@@ -627,7 +628,7 @@ class ChatApp extends PureComponent {
                   <Col lg="4">
                     <div class="mymessagehead">
                       <div class="mymsgsubhead">
-                        <h1 class="title mx-1 mb-2">My messages</h1>
+                        <h1 class="title mx-1 mb-2"><FormattedMessage id="My messages" defaultMessage="My messages"/></h1>
                         {/* <ChatAppList
                           userChatList={
                             this.state.userChatList.length
@@ -660,7 +661,7 @@ class ChatApp extends PureComponent {
                     <div class="app rt-chat">
                       <div className="my-auto mx-auto">
                         <h1 className="text-center">
-                          Please select user to start chat
+                        <FormattedMessage id="Please select user to start chat" defaultMessage="Please select user to start chat"/>
                         </h1>
                       </div>
                     </div>
@@ -774,7 +775,7 @@ class ChatApp extends PureComponent {
                             onClick={(e) => this.handleCloseChat(e)}
                             color="primary"
                           >
-                            Close Chat
+                            <FormattedMessage id="Close Chat" defaultMessage="Close Chat"/>
                           </Button>
                         </div>
                       </Col>
@@ -816,7 +817,7 @@ class ChatApp extends PureComponent {
                                 color="success"
                                 size="sm"
                               >
-                                View Kundaly
+                               <FormattedMessage id="View Kundaly" defaultMessage="View Kundaly"/>
                               </Button>
                             </div>
                           </div>

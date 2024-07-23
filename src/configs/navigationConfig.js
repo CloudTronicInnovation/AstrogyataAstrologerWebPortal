@@ -1,4 +1,5 @@
 import React from "react";
+import { FormattedMessage } from 'react-intl';
 import * as Icon from "react-feather";
 const navigationConfig = [
   {
@@ -24,7 +25,7 @@ const navigationConfig = [
   },
 
   {
-    id: "conversationintakeList",
+    id: "CONVERSATION_IN_TAKE",
     title: "Conversation Intake List",
     type: "item",
     icon: <Icon.List size={20} />,
@@ -121,7 +122,7 @@ const navigationConfig = [
 
   {
     id: "astroratings",
-    title: " Ratings and Reviews",
+    title: "Ratings and Reviews",
     type: "item",
     icon: <Icon.Star size={20} />,
     permissions: ["admin", "editor"],

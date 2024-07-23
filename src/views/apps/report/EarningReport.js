@@ -1,4 +1,5 @@
 import React from "react";
+import { FormattedMessage } from 'react-intl';
 import { Row, Col, Label } from "reactstrap";
 import "../../../assets/scss/plugins/tables/_agGridStyleOverride.scss";
 import "../../../assets/scss/pages/users.scss";
@@ -28,9 +29,9 @@ class EarningReport extends React.Component {
     return (
       <div>
         <Breadcrumbs
-          breadCrumbTitle="Earning Report"
-          breadCrumbParent="Home"
-          breadCrumbActive="Earning Report"
+          breadCrumbTitle={ <FormattedMessage id="Earning Report" defaultMessage="Earning Report"/>}
+          breadCrumbParent={ <FormattedMessage id="Home" defaultMessage="Home"/>}
+          breadCrumbActive={ <FormattedMessage id="Earning Report" defaultMessage="Earning Report"/>}
         />
 
         <Row className="app-user-list">
@@ -39,7 +40,7 @@ class EarningReport extends React.Component {
             <Row className="m-2">
               <Col>
                 <h1 sm="6" className="float-left">
-                  Earning Report
+                <FormattedMessage id="Earning Report" defaultMessage="Earning Report"/>
                 </h1>
               </Col>
             </Row>
@@ -47,7 +48,7 @@ class EarningReport extends React.Component {
               <Col>
                 <div className="container text-center card justify-content-center">
                   <Label>
-                    <h3 className="mt-1">Today Earn</h3>
+                    <h3 className="mt-1"><FormattedMessage id="Today's Earn" defaultMessage="Today Earn"/></h3>
                   </Label>
                   <h4>{this.state.rowData?.today} Rs</h4>
                 </div>
@@ -55,7 +56,7 @@ class EarningReport extends React.Component {
               <Col>
                 <div className="container text-center card justify-content-center">
                   <Label>
-                    <h3 className="mt-1">Weekly Earn</h3>
+                    <h3 className="mt-1"><FormattedMessage id="Weekly Earn" defaultMessage="Weekly Earn"/></h3>
                   </Label>
                   <h4>{this.state.rowData?.week} Rs</h4>
                 </div>
@@ -63,7 +64,7 @@ class EarningReport extends React.Component {
               <Col>
                 <div className="container text-center card justify-content-center">
                   <Label>
-                    <h3 className="mt-1">Month Earn</h3>
+                    <h3 className="mt-1"><FormattedMessage id="Month Earn" defaultMessage="Month Earn"/></h3>
                   </Label>
                   <h4>{this.state.rowData?.month} Rs</h4>
                 </div>
@@ -71,7 +72,7 @@ class EarningReport extends React.Component {
               <Col>
                 <div className="container text-center card justify-content-center">
                   <Label>
-                    <h3 className="mt-1">Total Earn</h3>
+                    <h3 className="mt-1"><FormattedMessage id="Total Earn" defaultMessage="Total Earn"/></h3>
                   </Label>
                   <h4>{this.state?.rowData?.total} Rs</h4>
                 </div>

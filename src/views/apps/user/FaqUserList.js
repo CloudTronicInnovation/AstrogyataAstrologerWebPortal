@@ -1,4 +1,5 @@
 import React from "react";
+import { FormattedMessage } from 'react-intl';
 import {
   Card,
   CardBody,
@@ -235,13 +236,13 @@ class FaqUserList extends React.Component {
   render() {
     const { rowData, columnDefs, defaultColDef } = this.state;
     return (
-      console.log(rowData),
+      // console.log(rowData),
       (
         <div>
           <Breadcrumbs
-            breadCrumbTitle="FAQ Users List"
-            breadCrumbParent="Home"
-            breadCrumbActive=" FAQ Users List "
+            breadCrumbTitle={<FormattedMessage id="USERS_FAQ_LIST" defaultMessage="FAQ Users List"/>}
+            breadCrumbParent={<FormattedMessage id="Home" defaultMessage="Home"/>}
+            breadCrumbActive={<FormattedMessage id="USERS_FAQ_LIST" defaultMessage="FAQ Users List"/>}
           />
 
           <Row className="app-user-list">
@@ -251,7 +252,7 @@ class FaqUserList extends React.Component {
                 <Row className="m-2">
                   <Col>
                     <h1 sm="6" className="float-left">
-                      Users FAQ List
+                    <FormattedMessage id="USERS_FAQ_LIST" defaultMessage="FAQ Users List"/>
                     </h1>
                   </Col>
                   {/* <Col>
@@ -332,7 +333,7 @@ class FaqUserList extends React.Component {
                               color="primary"
                               onClick={() => this.gridApi.exportDataAsCsv()}
                             >
-                              Export as CSV
+                             <FormattedMessage id="Export as CSV" defaultMessage="Export as CSV"/> 
                             </Button.Ripple>
                           </div>
                         </div>

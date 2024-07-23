@@ -1,4 +1,5 @@
 import React from "react";
+import { FormattedMessage } from 'react-intl';
 import {
   Card,
   CardBody,
@@ -221,9 +222,9 @@ class WaitQueueList extends React.Component {
       (
         <div>
           <Breadcrumbs
-            breadCrumbTitle="Wait Queue List"
-            breadCrumbParent="Home"
-            breadCrumbActive="Wait Queue List"
+            breadCrumbTitle={<FormattedMessage id="Wait Queue List" defaultMessage="Wait Queue List"/>}
+            breadCrumbParent={<FormattedMessage id="Home" defaultMessage="Home"/>}
+            breadCrumbActive={<FormattedMessage id="Wait Queue List" defaultMessage="Wait Queue List"/>}
           />
 
           <Row className="app-user-list">
@@ -233,7 +234,7 @@ class WaitQueueList extends React.Component {
                 <Row className="m-2">
                   <Col>
                     <h1 sm="6" className="float-left">
-                      Wait Queue List
+                    <FormattedMessage id="Wait Queue List" defaultMessage="Wait Queue List"/>
                     </h1>
                   </Col>
                   <Col></Col>
@@ -303,7 +304,7 @@ class WaitQueueList extends React.Component {
                               color="primary"
                               onClick={() => this.gridApi.exportDataAsCsv()}
                             >
-                              Export as CSV
+                             <FormattedMessage id="Export as CSV" defaultMessage="Export as CSV"/>
                             </Button.Ripple>
                           </div>
                         </div>

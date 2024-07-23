@@ -8,22 +8,41 @@ import {
   CardBody,
   CardText,
 } from "reactstrap";
-import ExtensionsHeader from "../extensionsHeader";
+// import ExtensionsHeader from "../extensionsHeader";
 import Radio from "../../components/@vuexy/radio/RadioVuexy";
 import { IntlContext } from "../../utility/context/Internationalization";
 import { FormattedMessage } from "react-intl";
 
 class I18nExtension extends React.Component {
+  componentDidMount() {
+    const { context } = this;
+    const storedLocale = localStorage.getItem("locale");
+
+    // Set initial locale based on stored value or default to 'en'
+    if (storedLocale) {
+      context.switchLanguage(storedLocale);
+    } else {
+      context.switchLanguage("en");
+    }
+  }
+  
+
   render() {
     return (
       <React.Fragment>
-        <ExtensionsHeader
+        {/* <ExtensionsHeader
           title="React Intl"
           subTitle="This library provides React components and an API to format dates, numbers, and strings, including pluralization and handling translations."
           link="https://www.npmjs.com/package/react-intl"
-        />
+        /> */}
         <IntlContext.Consumer>
           {(context) => {
+            this.context = context; // Store context for later use
+
+            const handleLanguageChange = (locale) => {
+              context.switchLanguage(locale);
+              localStorage.setItem("locale", locale); // Store selected language in localStorage
+            };
             return (
               <Row>
                 <Col sm="12">
@@ -38,11 +57,13 @@ class I18nExtension extends React.Component {
                     </CardHeader>
                     <CardBody>
                       <div className="language-options">
+                      
                         <Radio
                           name="i18n-lang-radio"
-                          onClick={() => {
-                            context.switchLanguage("en");
-                          }}
+                          // onClick={() => {
+                          //   context.switchLanguage("en");
+                          // }}
+                          onClick={() => handleLanguageChange("en")}
                           label={
                             <FormattedMessage
                               id="language.english"
@@ -53,6 +74,22 @@ class I18nExtension extends React.Component {
                           defaultChecked={context.state.locale === "en"}
                         />
                         <Radio
+                          name="i18n-lang-radio"
+                          // onClick={() => {
+                          //   context.switchLanguage("hi");
+                          // }}
+                          onClick={() => handleLanguageChange("hi")}
+                          label={
+                            <FormattedMessage
+                              id="language.hindi"
+                              defaultMessage="Hindi"
+                            />
+                          }
+                          className="mb-1"
+                          defaultChecked={context.state.locale === "hi"}
+                        />
+
+                        {/* <Radio
                           name="i18n-lang-radio"
                           onClick={() => {
                             context.switchLanguage("fr");
@@ -93,9 +130,9 @@ class I18nExtension extends React.Component {
                           }
                           className="mb-1"
                           defaultChecked={context.state.locale === "pt"}
-                        />
+                        /> */}
                       </div>
-                      <Card className="border mt-3">
+                      {/* <Card className="border mt-3">
                         <CardHeader>
                           <CardTitle>
                             <FormattedMessage
@@ -112,7 +149,7 @@ class I18nExtension extends React.Component {
                             />
                           </CardText>
                         </CardBody>
-                      </Card>
+                      </Card> */}
                     </CardBody>
                   </Card>
                 </Col>

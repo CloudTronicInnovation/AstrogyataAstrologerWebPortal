@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { FormattedMessage } from 'react-intl';
 import {
   Card,
   CardBody,
@@ -109,15 +110,15 @@ const AddAccount = (props) => {
   return (
     <div>
       <Breadcrumbs
-        breadCrumbTitle="Add Product"
-        breadCrumbParent=" Product Management"
-        breadCrumbActive="Add Product"
+        breadCrumbTitle={<FormattedMessage id="Add Product" defaultMessage=" Add Product"/>}
+        breadCrumbParent={<FormattedMessage id="Product Management" defaultMessage="Product Management"/>}
+        breadCrumbActive={<FormattedMessage id="Add Product" defaultMessage=" Add Product"/>}
       />
       <Card>
         <Row className="m-2">
           <Col>
             <h1 col-sm-6 className="float-left">
-              Add Account
+            <FormattedMessage id="Add Account" defaultMessage=" Add Account"/>
             </h1>
           </Col>
         </Row>
@@ -125,7 +126,7 @@ const AddAccount = (props) => {
           <Form className="m-1" onSubmit={submitHandler}>
             <Row>
               <Col lg="4" md="4" sm="4" className="mb-2">
-                <Label>Account HolderName</Label>
+                <Label>  <FormattedMessage id="Account HolderName" defaultMessage="Account HolderName"/></Label>
                 <Input
                   type="number"
                   name="holderName"
@@ -138,7 +139,7 @@ const AddAccount = (props) => {
                 ></Input>
               </Col>
               <Col lg="4" md="4" sm="4" className="mb-2">
-                <Label>Bank Name</Label>
+                <Label><FormattedMessage id="Bank Name" defaultMessage="Bank Name"/></Label>
                 <CustomInput
                   required
                   type="select"
@@ -149,7 +150,7 @@ const AddAccount = (props) => {
                   }}
                   defaultValue=""
                 >
-                  <option value="">Select a Bank</option>
+                  <option value="">Select a Bank </option>
                   {bankNames?.map((bank, index) => (
                     <option key={(bank, index)} value={bank}>
                       {bank}
@@ -158,7 +159,7 @@ const AddAccount = (props) => {
                 </CustomInput>
               </Col>
               <Col lg="4" md="4" sm="4" className="mb-2">
-                <Label>IFSC Code</Label>
+                <Label><FormattedMessage id="IFSC Code" defaultMessage="IFSC Code"/></Label>
                 <Input
                   type="text"
                   name="ifsc"
@@ -170,7 +171,7 @@ const AddAccount = (props) => {
                 ></Input>
               </Col>
               <Col lg="4" md="4" sm="4" className="mb-2">
-                <Label>Account Number</Label>
+                <Label><FormattedMessage id="Account Number" defaultMessage="Account Number"/></Label>
                 <Input
                   type="number"
                   name="account"
@@ -193,7 +194,7 @@ const AddAccount = (props) => {
                 ></Input>
               </Col>
               <Col lg="4" md="4" sm="4" className="mb-2">
-                <Label>Confirm Account Number</Label>
+                <Label><FormattedMessage id="Confirm Account Number" defaultMessage="Confirm Account Number"/></Label>
                 <Input
                   type="number"
                   name="c_account"
@@ -215,7 +216,7 @@ const AddAccount = (props) => {
                 ></Input>
               </Col>
               <Col lg="4" md="4" sm="4" className="mb-2">
-                <Label>Pancard Number</Label>
+                <Label><FormattedMessage id="Pancard Number" defaultMessage="Pancard Number"/></Label>
                 <Input
                   type="text"
                   name="txtPANCard"
@@ -235,7 +236,7 @@ const AddAccount = (props) => {
                   type="submit"
                   className="mr-1 mb-1"
                 >
-                  Save
+                 <FormattedMessage id="Save" defaultMessage="Save"/> 
                 </Button.Ripple>
               </Col>
             </Row>

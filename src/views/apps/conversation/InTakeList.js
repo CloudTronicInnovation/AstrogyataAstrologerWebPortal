@@ -26,6 +26,7 @@ import "../../../assets/scss/plugins/tables/_agGridStyleOverride.scss";
 import "../../../assets/scss/pages/users.scss";
 import { Route } from "react-router-dom";
 import Breadcrumbs from "../../../components/@vuexy/breadCrumbs/BreadCrumb";
+import { FormattedMessage } from 'react-intl';
 
 class InTakeList extends React.Component {
   state = {
@@ -343,9 +344,9 @@ class InTakeList extends React.Component {
     return (
       <div>
         <Breadcrumbs
-          breadCrumbTitle="Conversion InTake List"
-          breadCrumbParent="Home"
-          breadCrumbActive=" Conversion InTake List "
+          breadCrumbTitle={<FormattedMessage id="Conversion InTake List" defaultMessage="Conversion InTake List" />}
+          breadCrumbParent={  <FormattedMessage id="Home" defaultMessage="Home" />}
+          breadCrumbActive={<FormattedMessage id="Conversion InTake List" defaultMessage="Conversion InTake List" />}
         />
 
         <Row className="app-user-list">
@@ -355,12 +356,12 @@ class InTakeList extends React.Component {
               <Row className="m-2">
                 <Col>
                   <h1 sm="6" className="float-left">
-                    Conversion InTake List
+                  <FormattedMessage id="Conversion InTake List" defaultMessage="Conversion InTake List" />
                   </h1>
                 </Col>
                 <Col>
                   <Button color="primary" onClick={this.toggleModal}>
-                    User Form
+                  <FormattedMessage id="User Form" defaultMessage="User Form"/>
                   </Button>
                 </Col>
               </Row>
@@ -429,7 +430,7 @@ class InTakeList extends React.Component {
                             color="primary"
                             onClick={() => this.gridApi.exportDataAsCsv()}
                           >
-                            Export as CSV
+                              <FormattedMessage id="Export as CSV" defaultMessage="Export as CSV"/>
                           </Button.Ripple>
                         </div>
                       </div>
@@ -460,21 +461,21 @@ class InTakeList extends React.Component {
           </Col>
         </Row>
         <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-          <ModalHeader toggle={this.toggleModal}>Modal title</ModalHeader>
+          <ModalHeader toggle={this.toggleModal}> <FormattedMessage id="User Form" defaultMessage="User Form"/></ModalHeader>
           <ModalBody>
             <Form>
-              <Label>Name *</Label>
+              <Label><FormattedMessage id="Name" defaultMessage="Name"/>*</Label>
               <Input type="text" placeholder="Name" />
-              <Label>Place of Birth *</Label>
+              <Label><FormattedMessage id="Place of Birth" defaultMessage="Place of Birth"/>*</Label>
               <Input type="text" placeholder="Place of Birth" />
-              <Label>Birth Date *</Label>
+              <Label><FormattedMessage id="Birth Date" defaultMessage="Birth Date"/>*</Label>
               <Input type="date" />
-              <Label>Birth Time *</Label>
+              <Label><FormattedMessage id="Birth Time" defaultMessage="Birth Time"/>*</Label>
               <Input type="time" placeholder="Birth Time" />
-              <Label>Email*</Label>
+              <Label><FormattedMessage id="Email" defaultMessage="Email"/>*</Label>
               <Input type="email" placeholder="Enter Email" />
 
-              <Label>Select Gender</Label>
+              <Label><FormattedMessage id="Select Gender" defaultMessage="Select Gender"/></Label>
               <CustomInput
                 required
                 type="select"
@@ -491,10 +492,10 @@ class InTakeList extends React.Component {
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={this.handleSubmit}>
-              Submit
+            <FormattedMessage id="Submit" defaultMessage="Submit"/>
             </Button>
             <Button color="secondary" onClick={this.toggleModal}>
-              Cancel
+            <FormattedMessage id="Cancel" defaultMessage="Cancel"/>
             </Button>
           </ModalFooter>
         </Modal>

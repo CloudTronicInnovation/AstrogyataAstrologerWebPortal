@@ -1,4 +1,5 @@
 import React from "react";
+import { FormattedMessage } from 'react-intl';
 import {
   Card,
   CardBody,
@@ -113,7 +114,7 @@ class GallaryList extends React.Component {
       .get(`/admin/get_astroGallery/${astroId}`)
       .then((response) => {
         let rowData = response.data.data;
-        console.log(rowData[0].file);
+        // console.log(rowData[0].file);
         this.setState({ rowData });
       });
   }
@@ -155,9 +156,9 @@ class GallaryList extends React.Component {
     return (
       <div>
         <Breadcrumbs
-          breadCrumbTitle="Gallary List"
-          breadCrumbParent="Home"
-          breadCrumbActive="Gallary List"
+          breadCrumbTitle={ <FormattedMessage id="Gallery List" defaultMessage="Gallary List"/>}
+          breadCrumbParent={ <FormattedMessage id="Home" defaultMessage="Home"/>}
+          breadCrumbActive={ <FormattedMessage id="Gallery List" defaultMessage="Gallary List"/>}
         />
 
         <Row className="app-user-list">
@@ -167,7 +168,7 @@ class GallaryList extends React.Component {
               <Row className="m-2">
                 <Col>
                   <h1 sm="6" className="float-left">
-                    Gallary List
+                  <FormattedMessage id="Gallery List" defaultMessage="Gallary List"/>
                   </h1>
                 </Col>
                 <Col>
@@ -177,7 +178,7 @@ class GallaryList extends React.Component {
                         className=" btn btn-success float-right"
                         onClick={() => history.push("/uploads")}
                       >
-                        Add Gallary
+                        <FormattedMessage id="Add Gallery" defaultMessage="Add Gallary"/>
                       </Button>
                     )}
                   />
@@ -248,7 +249,7 @@ class GallaryList extends React.Component {
                             color="primary"
                             onClick={() => this.gridApi.exportDataAsCsv()}
                           >
-                            Export as CSV
+                           <FormattedMessage id="Export as CSV" defaultMessage="Export as CSV"/> 
                           </Button.Ripple>
                         </div>
                       </div>

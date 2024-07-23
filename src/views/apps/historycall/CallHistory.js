@@ -15,6 +15,7 @@ import axiosConfig from "../../../axiosConfig";
 import { ContextLayout } from "../../../utility/context/Layout";
 import { AgGridReact } from "ag-grid-react";
 import { Eye, Edit, Trash2, ChevronDown } from "react-feather";
+import { FormattedMessage } from 'react-intl';
 
 import "../../../assets/scss/plugins/tables/_agGridStyleOverride.scss";
 import "../../../assets/scss/pages/users.scss";
@@ -35,6 +36,7 @@ class CallHistory extends React.Component {
     },
     columnDefs: [
       {
+        id: "dashboard",
         headerName: "S.No",
         valueGetter: "node.rowIndex + 1",
         field: "node.rowIndex + 1",
@@ -175,9 +177,9 @@ class CallHistory extends React.Component {
     return (
       <div>
         <Breadcrumbs
-          breadCrumbTitle="Call Histroy"
-          breadCrumbParent="Home"
-          breadCrumbActive="Call Histroy "
+          breadCrumbTitle={<FormattedMessage id="Call History" defaultMessage="Call Histroy" />}
+          breadCrumbParent={<FormattedMessage id="Home" defaultMessage="Home" />}
+          breadCrumbActive={<FormattedMessage id="Call History" defaultMessage="Call Histroy" />}
         />
 
         <Row className="app-user-list">
@@ -187,7 +189,7 @@ class CallHistory extends React.Component {
               <Row className="m-2">
                 <Col>
                   <h1 sm="6" className="float-left">
-                    Call Histroy
+                  <FormattedMessage id="Call History" defaultMessage="Call Histroy" />
                   </h1>
                 </Col>
               </Row>
@@ -256,7 +258,7 @@ class CallHistory extends React.Component {
                             color="primary"
                             onClick={() => this.gridApi.exportDataAsCsv()}
                           >
-                            Export as CSV
+                           <FormattedMessage id="Export as CSV" defaultMessage=" Export as CSV" />
                           </Button.Ripple>
                         </div>
                       </div>

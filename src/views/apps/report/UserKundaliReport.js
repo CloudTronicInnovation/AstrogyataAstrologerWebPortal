@@ -7,7 +7,7 @@ import ReactHtmlParser from "react-html-parser";
 import { panchanURL } from "../../../axiosConfig";
 // import AshtvargaTables from "./ashtvargatables";
 import AshtvargaTables from "./ashtvargatables";
-
+import { FormattedMessage } from "react-intl";
 import { PANCHANG_KEY } from "../../../panchangCredetials";
 import moment from "moment";
 import { useDispatch } from "react-redux";
@@ -49,9 +49,9 @@ const UserKundaliReport = (props) => {
   const [saturnAshvarga, setSaturnAshvarga] = useState(null);
 
   const [userData, setUserData] = useState(null);
-  const [indexValue,setIndexValue] = useState(null);
+  const [indexValue, setIndexValue] = useState(null);
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     if (localStorage.getItem("userKundaliInfo")) fetchPanchangDetails();
     setBasicDetails(JSON.parse(localStorage.getItem("userKundaliInfo")));
@@ -68,7 +68,7 @@ const UserKundaliReport = (props) => {
 
     const reqPanchangData = {
       day: day,
-      month: month, 
+      month: month,
       year: year,
       hour: date_of_time?.split(":")[0],
       min: date_of_time?.split(":")[1],
@@ -100,7 +100,16 @@ const UserKundaliReport = (props) => {
     ];
 
     Promise.all(requests).then(
-      ([panchangRes, lagnaRes, moonRes, sunRes, chalitRes, D2Res, D3Res, D60Res]) => {
+      ([
+        panchangRes,
+        lagnaRes,
+        moonRes,
+        sunRes,
+        chalitRes,
+        D2Res,
+        D3Res,
+        D60Res,
+      ]) => {
         setBasicPanchang(panchangRes.data);
 
         const responseMap = [
@@ -335,11 +344,11 @@ const UserKundaliReport = (props) => {
       <Link
         to={{
           pathname: "/app/astrochat/chatastro",
-          state: {...userData, indexValue},
+          state: { ...userData, indexValue },
         }}
         className="btn btn-danger float-right btn-sm text-white"
       >
-        Back
+        <FormattedMessage id="Back" defaultMessage="Back" />
       </Link>
 
       {basicDetails == null ? (
@@ -380,19 +389,34 @@ const UserKundaliReport = (props) => {
                             colSpan={2}
                             className="bg-success text-white text-center"
                           >
-                            Basic Details
+                            <FormattedMessage
+                              id="Basic Details"
+                              defaultMessage="Basic Details"
+                            />
                           </th>
                         </tr>
                         <tr>
-                          <th>Name</th>
+                          <th>
+                            <FormattedMessage id="Name" defaultMessage="Name" />
+                          </th>
                           <td>{basicDetails?.firstname}</td>
                         </tr>
                         <tr>
-                          <th>Birth Date</th>
+                          <th>
+                            <FormattedMessage
+                              id="Birth Date"
+                              defaultMessage="Birth Date"
+                            />
+                          </th>
                           <td>{basicDetails?.dob}</td>
                         </tr>
                         <tr>
-                          <th>Birth Time</th>
+                          <th>
+                            <FormattedMessage
+                              id="Birth Time"
+                              defaultMessage="Birth Time"
+                            />
+                          </th>
                           <td>
                             {getAMPM(
                               basicDetails?.date_of_time?.split(":")[0],
@@ -401,7 +425,12 @@ const UserKundaliReport = (props) => {
                           </td>
                         </tr>
                         <tr>
-                          <th>Birth Place</th>
+                          <th>
+                            <FormattedMessage
+                              id="Place of Birth"
+                              defaultMessage="Birth Place"
+                            />
+                          </th>
                           <td>{basicDetails && basicDetails?.birthPlace}</td>
                         </tr>
                         {/* <tr>
@@ -458,23 +487,38 @@ const UserKundaliReport = (props) => {
                             colSpan={2}
                             className="bg-success text-white text-center"
                           >
-                            Panchang Details
+                            <FormattedMessage
+                              id="Panchang Details"
+                              defaultMessage="Panchang Details"
+                            />
                           </th>
                         </tr>
                         <tr>
-                          <th>Day </th>
+                          <th>
+                            <FormattedMessage id="Day" defaultMessage="Day" />
+                          </th>
                           <td>
                             {basicPanchang != null ? basicPanchang.day : ""}
                           </td>
                         </tr>
                         <tr>
-                          <th>Tithi </th>
+                          <th>
+                            <FormattedMessage
+                              id="Tithi"
+                              defaultMessage="Tithi"
+                            />
+                          </th>
                           <td>
                             {basicPanchang != null ? basicPanchang.tithi : ""}
                           </td>
                         </tr>
                         <tr>
-                          <th>Nakshatra</th>
+                          <th>
+                            <FormattedMessage
+                              id="Nakshatra"
+                              defaultMessage="Nakshatra"
+                            />
+                          </th>
                           <td>
                             {basicPanchang != null
                               ? basicPanchang.nakshatra
@@ -482,31 +526,53 @@ const UserKundaliReport = (props) => {
                           </td>
                         </tr>
                         <tr>
-                          <th>Yog</th>
+                          <th>
+                            <FormattedMessage id="Yog" defaultMessage="Yog" />
+                          </th>
                           <td>
                             {basicPanchang != null ? basicPanchang.yog : ""}
                           </td>
                         </tr>
                         <tr>
-                          <th>Karan</th>
+                          <th>
+                            <FormattedMessage
+                              id="Karana"
+                              defaultMessage="Karana"
+                            />
+                          </th>
                           <td>
                             {basicPanchang != null ? basicPanchang.karan : ""}
                           </td>
                         </tr>
                         <tr>
-                          <th>Sun Rise</th>
+                          <th>
+                            <FormattedMessage
+                              id="Sun Rise"
+                              defaultMessage="Sun Rise"
+                            />
+                          </th>
                           <td>
                             {basicPanchang != null ? basicPanchang.sunrise : ""}
                           </td>
                         </tr>
                         <tr>
-                          <th>Sun Set</th>
+                          <th>
+                            <FormattedMessage
+                              id="Sun Set"
+                              defaultMessage="Sun Set"
+                            />
+                          </th>
                           <td>
                             {basicPanchang != null ? basicPanchang.sunset : ""}
                           </td>
                         </tr>
                         <tr>
-                          <th>Vedic Sunrise</th>
+                          <th>
+                            <FormattedMessage
+                              id="Vedic Sunrise"
+                              defaultMessage="Vedic Sunrise"
+                            />
+                          </th>
                           <td>
                             {basicPanchang != null
                               ? basicPanchang.vedic_sunrise
@@ -514,7 +580,13 @@ const UserKundaliReport = (props) => {
                           </td>
                         </tr>
                         <tr>
-                          <th>Vedic Sunset</th>
+                          <th>
+                            <FormattedMessage
+                              id="Vedic Sunset"
+                              defaultMessage="Vedic Sunset"
+                            />
+                          </th>
+
                           <td>
                             {basicPanchang != null
                               ? basicPanchang.vedic_sunset
@@ -528,36 +600,51 @@ const UserKundaliReport = (props) => {
 
                 <Col md="12" className="smooth-transition">
                   <p className="bg-success text-white text-center m-auto fw-bold p-2 pb-0 mb-0">
-                    Horoscope Chart
+                    <FormattedMessage
+                      id="Horoscope Chart"
+                      defaultMessage="Horoscope Chart"
+                    />
                   </p>
                   <Row className="border" style={{ margin: ".5px" }}>
                     {svgVishible?.lagnaSvg && (
                       <Col md="6" className="panchang-chart mt-2 text-center">
-                        <h6 className="fw-semibold text-center">Lagna Chart</h6>
+                        <h6 className="fw-semibold text-center">
+                          {" "}
+                          <FormattedMessage
+                            id="Lagna Chart"
+                            defaultMessage="Lagna Chart"
+                          />
+                        </h6>
                         {ReactHtmlParser(lagnaSvg)}
                       </Col>
                     )}
 
                     {svgVishible?.moonSvg && (
                       <Col md="6" className="panchang-chart mt-2 text-center">
-                        <h6 className="fw-semibold text-center">Moon Chart</h6>
+                        <h6 className="fw-semibold text-center">
+                          {" "}
+                          <FormattedMessage
+                            id="Moon Chart"
+                            defaultMessage="Moon Chart"
+                          />
+                        </h6>
                         {ReactHtmlParser(moonSvg)}
                       </Col>
                     )}
-                     {/* SUN CHART  */}
-                     {svgVishible?.sunSvg && (
-                              <Col
-                                md="6"
-                                className="panchang-chart mt-2 text-center"
-                              >
-                                <h6 className="fw-semibold text-center">
-                                  Sun Chart
-                                </h6>
-                                {ReactHtmlParser(sunSvg)}
-                              </Col>
-                            )}
-                            {/* CHALIT CHART  */}
-                            {/* {svgVishible?.chalitSvg && (
+                    {/* SUN CHART  */}
+                    {svgVishible?.sunSvg && (
+                      <Col md="6" className="panchang-chart mt-2 text-center">
+                        <h6 className="fw-semibold text-center">
+                          <FormattedMessage
+                            id="Sun Chart"
+                            defaultMessage="Sun Chart"
+                          />
+                        </h6>
+                        {ReactHtmlParser(sunSvg)}
+                      </Col>
+                    )}
+                    {/* CHALIT CHART  */}
+                    {/* {svgVishible?.chalitSvg && (
                               <Col
                               md="6"
                               className="panchang-chart mt-2 text-center"
@@ -569,42 +656,42 @@ const UserKundaliReport = (props) => {
                               </Col>
                               )} */}
 
-                            {/* HORA CHART  */}
-                            {svgVishible?.horaSvg && (
-                              <Col
-                                md="6"
-                                className="panchang-chart mt-2 text-center"
-                              >
-                                <h6 className="fw-semibold text-center">
-                                Hora(Wealth / Income Chart)
-                                </h6>
-                                {ReactHtmlParser(horaSvg)}
-                              </Col>
-                            )}
-                            {/* DRESHKAN CHART  */}
-                            {svgVishible?.dreshkanSvg && (
-                              <Col
-                                md="6"
-                                className="panchang-chart mt-2 text-center"
-                              >
-                                <h6 className="fw-semibold text-center">
-                                Drekkana(Relationship with siblings)
-                                </h6>
-                                {ReactHtmlParser(dreshkanSvg)}
-                              </Col>
-                            )}
-                            {/* SHASHTYMSHA CHART  */}
-                            {svgVishible?.shashtymshaSvg && (
-                              <Col
-                              md="6"
-                              className="panchang-chart mt-2 text-center"
-                              >
-                                <h6 className="fw-semibold text-center">
-                                Shastiamsa(Summary of charts)
-                                </h6>
-                                {ReactHtmlParser(shashtymshaSvg)}
-                              </Col>
-                              )}
+                    {/* HORA CHART  */}
+                    {svgVishible?.horaSvg && (
+                      <Col md="6" className="panchang-chart mt-2 text-center">
+                        <h6 className="fw-semibold text-center">
+                          <FormattedMessage
+                            id="Hora(Wealth / Income Chart)"
+                            defaultMessage="Hora(Wealth / Income Chart)"
+                          />
+                        </h6>
+                        {ReactHtmlParser(horaSvg)}
+                      </Col>
+                    )}
+                    {/* DRESHKAN CHART  */}
+                    {svgVishible?.dreshkanSvg && (
+                      <Col md="6" className="panchang-chart mt-2 text-center">
+                        <h6 className="fw-semibold text-center">
+                          <FormattedMessage
+                            id="Drekkana(Relationship with siblings)"
+                            defaultMessage="Drekkana(Relationship with siblings)"
+                          />
+                        </h6>
+                        {ReactHtmlParser(dreshkanSvg)}
+                      </Col>
+                    )}
+                    {/* SHASHTYMSHA CHART  */}
+                    {svgVishible?.shashtymshaSvg && (
+                      <Col md="6" className="panchang-chart mt-2 text-center">
+                        <h6 className="fw-semibold text-center">
+                          <FormattedMessage
+                            id="Shastiamsa(Summary of charts)"
+                            defaultMessage="Shastiamsa(Summary of charts)"
+                          />
+                        </h6>
+                        {ReactHtmlParser(shashtymshaSvg)}
+                      </Col>
+                    )}
                     {!svgVishible?.moonSvg && (
                       <Col md="6" className="text-center my-4">
                         No Data Found
@@ -632,11 +719,33 @@ const UserKundaliReport = (props) => {
                     <Table className="planet-position table-bordered table-rounded">
                       <thead className="thead-dark">
                         <tr>
-                          <th>Planet</th>
-                          <th>Rashi</th>
-                          <th>Longitude</th>
-                          <th>Nakshatra</th>
-                          <th>Pada</th>
+                          <th>
+                            <FormattedMessage
+                              id="Planet"
+                              defaultMessage="Planet"
+                            />
+                          </th>
+                          <th>
+                            <FormattedMessage
+                              id="Rashi"
+                              defaultMessage="Rashi"
+                            />
+                          </th>
+                          <th>
+                            <FormattedMessage
+                              id="Longitude"
+                              defaultMessage="Longitude"
+                            />
+                          </th>
+                          <th>
+                            <FormattedMessage
+                              id="Nakshatra"
+                              defaultMessage="Nakshatra"
+                            />
+                          </th>
+                          <th>
+                            <FormattedMessage id="Pada" defaultMessage="Pada" />
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -716,8 +825,18 @@ const UserKundaliReport = (props) => {
                               </th>
                             </tr>
                             <tr>
-                              <th className="fw-normal">Start</th>
-                              <th className="fw-normal">End</th>
+                              <th className="fw-normal">
+                                <FormattedMessage
+                                  id="Start"
+                                  defaultMessage="Start"
+                                />
+                              </th>
+                              <th className="fw-normal">
+                                <FormattedMessage
+                                  id="End"
+                                  defaultMessage="End"
+                                />
+                              </th>
                             </tr>
                           </thead>
                           <tbody>
@@ -753,8 +872,18 @@ const UserKundaliReport = (props) => {
                               </th>
                             </tr>
                             <tr>
-                              <th className="fw-normal">Start</th>
-                              <th className="fw-normal">End</th>
+                              <th className="fw-normal">
+                                <FormattedMessage
+                                  id="Start"
+                                  defaultMessage="Start"
+                                />
+                              </th>
+                              <th className="fw-normal">
+                                <FormattedMessage
+                                  id="End"
+                                  defaultMessage="End"
+                                />
+                              </th>
                             </tr>
                           </thead>
                           <tbody>

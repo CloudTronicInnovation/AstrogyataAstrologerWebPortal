@@ -353,6 +353,9 @@
 //   }
 // }
 // export default RatingReview;
+
+
+import { FormattedMessage } from 'react-intl';
 import React from "react";
 import {
   Card,
@@ -578,9 +581,9 @@ class RatingReview extends React.Component {
       (
         <div>
           <Breadcrumbs
-            breadCrumbTitle="Review Rating"
-            breadCrumbParent="Home"
-            breadCrumbActive="Review Rating"
+            breadCrumbTitle={<FormattedMessage id="Review Rating" defaultMessage="Review Rating"/>}
+            breadCrumbParent={<FormattedMessage id="Home" defaultMessage="Home"/>}
+            breadCrumbActive={<FormattedMessage id="Review Rating" defaultMessage="Review Rating"/>}
           />
 
           <Row className="app-user-list">
@@ -590,7 +593,7 @@ class RatingReview extends React.Component {
                 <Row className="m-2">
                   <Col>
                     <h1 sm="6" className="float-left">
-                      All Ratings
+                    <FormattedMessage id="All Ratings" defaultMessage="All Ratings"/>
                     </h1>
                   </Col>
                   {/* <Col>
@@ -673,7 +676,7 @@ class RatingReview extends React.Component {
                               color="primary"
                               onClick={() => this.gridApi.exportDataAsCsv()}
                             >
-                              Export as CSV
+                              <FormattedMessage id="Export as CSV" defaultMessage="Export as CSV"/> 
                             </Button.Ripple>
                           </div>
                         </div>
