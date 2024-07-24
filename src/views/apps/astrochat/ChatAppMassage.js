@@ -9,6 +9,7 @@ class ChatAppMassage extends React.Component {
     this.state = {};
   }
   render() {
+    console.log(this.props);
     return (
       <>
         {this.props.roomChatData?.length
@@ -20,10 +21,18 @@ class ChatAppMassage extends React.Component {
                       <div class="message me">
                         <div class="message-body">{chat?.msg}</div>
                       </div>
-                    ) :
-                     (
+                    ) : (
                       <div className="message">
-                        <div class="message-body">{ReactHtmlParser(chat?.msg)}</div>
+                        <div class="message-body">
+                          {ReactHtmlParser(chat?.msg)}{" "}
+                          {chat.img && (
+                            <img
+                              src={chat.img}
+                              alt="chat-image"
+                              style={{ maxWidth: "100%", height: "auto" }} // Adjust as needed
+                            />
+                          )}
+                        </div>
                       </div>
                     )}
                   </>
