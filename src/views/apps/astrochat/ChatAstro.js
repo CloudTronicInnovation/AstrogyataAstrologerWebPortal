@@ -50,6 +50,22 @@ class ChatApp extends PureComponent {
     this.startTimer = this.startTimer.bind(this);
     this.countDown = this.countDown.bind(this);
   }
+  
+  // handleKundaly = () => {
+  //   const { userData, indexValue } = this.state;
+  //   if (!userData) {
+  //     this.props.history.push({
+  //       pathname: "/app/historycall/callhistory",
+  //     });
+  //     return;
+  //   }
+  //   // If userData is not null or blank, proceed as usual
+  //   this.props.history.push({
+  //     pathname: "/app/report/kundalireport",
+  //     state: { user: userData, indexValue: indexValue },
+  //   });
+  // };
+
   handleKundaly = () => {
     this.props.history.push({
       pathname: "/app/report/kundalireport",

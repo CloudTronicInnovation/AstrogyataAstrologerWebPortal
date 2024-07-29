@@ -173,6 +173,7 @@ class CallReport extends React.Component {
   componentDidMount() {
     let astroid = localStorage.getItem("astroId");
     axiosConfig.get(`/user/astroCallHistory/${astroid}`).then((response) => {
+      console.log(response);
       let rowData = response.data.data;
       this.setState({ rowData });
     });

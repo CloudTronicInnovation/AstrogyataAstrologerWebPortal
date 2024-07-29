@@ -66,6 +66,14 @@ class ChatReport extends React.Component {
         field: "duration",
         filter: true,
         width: 180,
+        valueGetter: (params) => {
+          const totalSeconds = params.data.totalDuration;
+          const minutes = Math.floor(totalSeconds / 60);
+          const seconds = totalSeconds % 60;
+          const formattedMinutes = String(minutes).padStart(2, '0');
+          const formattedSeconds = String(seconds).padStart(2, '0');
+          return `${formattedMinutes}:${formattedSeconds}`;
+        },
         cellRendererFramework: (params) => {
           return (
             <div>
@@ -75,7 +83,7 @@ class ChatReport extends React.Component {
                 </>
               ) : (
                 <>
-                  <span>{params.data?.totalDuration} Min</span>
+                  <span>{params.value} Min</span>
                 </>
               )}
             </div>
@@ -129,18 +137,18 @@ class ChatReport extends React.Component {
   };
 
   componentDidMount() {
-    let astroid = localStorage.getItem("astroId");
-    axiosConfig.get(`/user/astroChathistory/${astroid}`).then((response) => {
-      // console.log("Response Data: ", response.data.data);
-      let AllReport = response.data.data;
-      let rowData = AllReport?.filter((value) => {
-        if (value?.type === "Chat") {
-          return value;
-        }
-      });
-      // console.log("Filtered Row Data: ", rowData);
-      this.setState({ rowData });
-    });
+    // let astroid = localStorage.getItem("astroId");
+    // axiosConfig.get(`/user/astroChathistory/${astroid}`).then((response) => {
+    //   // console.log("Response Data: ", response.data.data);
+    //   let AllReport = response.data.data;
+    //   let rowData = AllReport?.filter((value) => {
+    //     if (value?.type === "Chat") {
+    //       return value;
+    //     }
+    //   });
+    //   // console.log("Filtered Row Data: ", rowData);
+    //   this.setState({ rowData });
+    // });
     this.ChatHistoryList();
   }
   
@@ -148,10 +156,10 @@ class ChatReport extends React.Component {
     // setInterval(() => {
       let astroid = localStorage.getItem("astroId");
       axiosConfig.get(`/user/astroChathistory/${astroid}`).then((response) => {
-        // console.log(response);
+        console.log(response);
         let AllReport = response.data.data;
         let rowData = AllReport?.filter((value) => {
-          if (value?.type === "Chat") {
+          if (value?.type === "chat") {
             return value;
           }
         });
