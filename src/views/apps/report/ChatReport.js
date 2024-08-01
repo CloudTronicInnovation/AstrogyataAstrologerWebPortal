@@ -96,15 +96,15 @@ class ChatReport extends React.Component {
         filter: true,
         width: 200,
         cellRendererFramework: (params) => {
+          const userName = params.data?.userId?.fullname || "Unavailable";
           return (
             <div>
-              <>
-                <span>{params.data?.userId.fullname}</span>
-              </>
+              <span>{userName}</span>
             </div>
           );
         },
       },
+      
 
       {
         headerName: "Date",

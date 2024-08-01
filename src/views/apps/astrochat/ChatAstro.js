@@ -1,5 +1,26 @@
 import React, { PureComponent } from "react";
-import { Button, Col, Container, Row } from "reactstrap";
+import {
+  Card,
+  CardBody,
+  Input,
+  Row,
+  Col,
+  Button,
+  UncontrolledDropdown,
+  DropdownMenu,
+  DropdownItem,
+  DropdownToggle,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Form,
+  Label,
+  CustomInput,
+  Container,
+} from "reactstrap";
+import Select from "react-select";
+import { Country, State, City } from "country-state-city";
 import "../../../assets/scss/pages/astrochat.scss";
 import Buyimg from "../../../assets/img/boy-img.png";
 import ChatAppList from "./ChatAppList";
@@ -8,7 +29,7 @@ import axiosConfig from "../../../axiosConfig";
 import Swal from "sweetalert2";
 import { FaArrowAltCircleRight } from "react-icons/fa";
 import { chatAcceptStatus } from "../../../redux/actions/chat";
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 
 class ChatApp extends PureComponent {
@@ -44,33 +65,58 @@ class ChatApp extends PureComponent {
       indexValue: 0,
       checkroomflag: true,
       timer: savedTime,
+      modal: false,
+      birthPlace: "",
+      selectedCountry: {
+        name: "India",
+        isoCode: "IN",
+        flag: "🇮🇳",
+        phonecode: "91",
+        currency: "INR",
+        latitude: "20.00000000",
+        longitude: "77.00000000",
+        timezones: [
+          {
+            zoneName: "Asia/Kolkata",
+            gmtOffset: 19800,
+            gmtOffsetName: "UTC+05:30",
+            abbreviation: "IST",
+            tzName: "Indian Standard Time",
+          },
+        ],
+      },
+      selectedState: null,
+      selectedCity: null,
     };
     this.intervalId = null;
     this.timer = 0;
     this.startTimer = this.startTimer.bind(this);
     this.countDown = this.countDown.bind(this);
   }
-  
-  // handleKundaly = () => {
-  //   const { userData, indexValue } = this.state;
-  //   if (!userData) {
-  //     this.props.history.push({
-  //       pathname: "/app/historycall/callhistory",
-  //     });
-  //     return;
-  //   }
-  //   // If userData is not null or blank, proceed as usual
-  //   this.props.history.push({
-  //     pathname: "/app/report/kundalireport",
-  //     state: { user: userData, indexValue: indexValue },
-  //   });
-  // };
 
   handleKundaly = () => {
-    this.props.history.push({
-      pathname: "/app/report/kundalireport",
-      state: { user: this.state.userData, indexValue: this.state.indexValue },
-    });
+    const UserIntakeid = localStorage.getItem("UserIntakeid");
+
+    if (UserIntakeid) {
+      this.props.history.push({
+        pathname: "/app/report/kundalireport",
+        state: { user: this.state.userData, indexValue: this.state.indexValue },
+      });
+    } else {
+      // this.props.history.push({
+      //   pathname: "/app/historycall/callhistory",
+      // });
+      this.toggleModal();
+    }
+  };
+
+  toggleModal = () => {
+    this.setState({ modal: !this.state.modal });
+  };
+
+  handleChange1 = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+    console.log(e.target.value);
   };
 
   closeModal = () => {
@@ -93,8 +139,10 @@ class ChatApp extends PureComponent {
         console.log(err.response.data);
       });
   };
+
   handleCloseChat = (e) => {
     e.preventDefault();
+    window.location.replace("/");
     let astroid = localStorage.getItem("astroId");
     let userid = localStorage.getItem("CurrentChat_userid");
     let value = {
@@ -529,9 +577,7 @@ class ChatApp extends PureComponent {
   };
 
   handleChange = (e) => {
-    this.setState({
-      msg: e.target.value,
-    });
+    this.setState({ msg: e.target.value });
     this.setState({ tooglebtn: e.target.value.trim() !== "" });
   };
 
@@ -644,7 +690,12 @@ class ChatApp extends PureComponent {
                   <Col lg="4">
                     <div class="mymessagehead">
                       <div class="mymsgsubhead">
-                        <h1 class="title mx-1 mb-2"><FormattedMessage id="My messages" defaultMessage="My messages"/></h1>
+                        <h1 class="title mx-1 mb-2">
+                          <FormattedMessage
+                            id="My messages"
+                            defaultMessage="My messages"
+                          />
+                        </h1>
                         {/* <ChatAppList
                           userChatList={
                             this.state.userChatList.length
@@ -677,7 +728,10 @@ class ChatApp extends PureComponent {
                     <div class="app rt-chat">
                       <div className="my-auto mx-auto">
                         <h1 className="text-center">
-                        <FormattedMessage id="Please select user to start chat" defaultMessage="Please select user to start chat"/>
+                          <FormattedMessage
+                            id="Please select user to start chat"
+                            defaultMessage="Please select user to start chat"
+                          />
                         </h1>
                       </div>
                     </div>
@@ -791,7 +845,10 @@ class ChatApp extends PureComponent {
                             onClick={(e) => this.handleCloseChat(e)}
                             color="primary"
                           >
-                            <FormattedMessage id="Close Chat" defaultMessage="Close Chat"/>
+                            <FormattedMessage
+                              id="Close Chat"
+                              defaultMessage="Close Chat"
+                            />
                           </Button>
                         </div>
                       </Col>
@@ -833,7 +890,10 @@ class ChatApp extends PureComponent {
                                 color="success"
                                 size="sm"
                               >
-                               <FormattedMessage id="View Kundaly" defaultMessage="View Kundaly"/>
+                                <FormattedMessage
+                                  id="View Kundaly"
+                                  defaultMessage="View Kundaly"
+                                />
                               </Button>
                             </div>
                           </div>
@@ -887,6 +947,111 @@ class ChatApp extends PureComponent {
               )}
             </Row>
           </Container>
+          <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+            <ModalHeader toggle={this.toggleModal}>
+              {" "}
+              <FormattedMessage
+                id="Kundali Form"
+                defaultMessage="Kundali Form"
+              />
+            </ModalHeader>
+            <ModalBody>
+              <Form>
+                <Label>
+                  <FormattedMessage id="Name" defaultMessage="Name" />*
+                </Label>
+                <Input type="text" placeholder="Name" />
+                {/* <Label>
+                  <FormattedMessage
+                    id="Place of Birth"
+                    defaultMessage="Place of Birth"
+                  />
+                  *
+                </Label>
+                <Input type="text" placeholder="Place of Birth" /> */}
+                <Label>
+                  <FormattedMessage
+                    id="Birth Date"
+                    defaultMessage="Birth Date"
+                  />
+                  *
+                </Label>
+                <Input type="date" />
+                <Label>
+                  <FormattedMessage
+                    id="Birth Time"
+                    defaultMessage="Birth Time"
+                  />
+                  *
+                </Label>
+                <Input type="time" placeholder="Birth Time" />
+                <Label>
+                  <FormattedMessage
+                    id="Select Gender"
+                    defaultMessage="Select Gender"
+                  />
+                </Label>
+                <CustomInput
+                  required
+                  type="select"
+                  name="gender"
+                  // value={category}
+                  onChange={this.handleChange1}
+                >
+                  <option>....Select Gender.....</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </CustomInput>
+
+                <Label>Country</Label>
+                <Select
+                  options={Country.getAllCountries()}
+                  getOptionLabel={(options) => options["name"]}
+                  getOptionValue={(options) => options["name"]}
+                  value={this.state.selectedCountry}
+                  onChange={(item) => {
+                    this.setState({ selectedCountry: item });
+                  }}
+                />
+
+                <Label>State</Label>
+                <Select
+                  options={State.getStatesOfCountry(
+                    this.state.selectedCountry?.isoCode
+                  )}
+                  getOptionLabel={(options) => options["name"]}
+                  getOptionValue={(options) => options["name"]}
+                  value={this.state.selectedState}
+                  onChange={(item) => {
+                    this.setState({ selectedState: item });
+                  }}
+                />
+
+                <Label>City</Label>
+                <Select
+                  options={City.getCitiesOfState(
+                    this.state.selectedState?.countryCode,
+                    this.state.selectedState?.isoCode
+                  )}
+                  getOptionLabel={(options) => options["name"]}
+                  getOptionValue={(options) => options["name"]}
+                  value={this.state.selectedCity}
+                  onChange={(item) => {
+                    this.changeCity(item);
+                  }}
+                />
+              </Form>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={this.handleSubmit}>
+                <FormattedMessage id="Submit" defaultMessage="Submit" />
+              </Button>
+              <Button color="secondary" onClick={this.toggleModal}>
+                <FormattedMessage id="Cancel" defaultMessage="Cancel" />
+              </Button>
+            </ModalFooter>
+          </Modal>
         </section>
       </div>
     );

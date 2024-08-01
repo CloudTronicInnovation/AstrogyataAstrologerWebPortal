@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from "react";
 import Swal from "sweetalert2";
+import 'sweetalert2/dist/sweetalert2.css';
 import { MdCall } from "react-icons/md";
 import { IoChatbox, IoLanguageSharp } from "react-icons/io5";
 import { useState, useEffect } from "react";
@@ -160,7 +161,7 @@ const NavbarUser = () => {
       buttonsStyling: false,
     });
 
-    // Determine the appropriate title and button text based on the current status
+    // title and button text based on the current status
     const title =
       ButtonText === "Online"
         ? "Are You Sure To Go Offline?"
@@ -184,22 +185,22 @@ const NavbarUser = () => {
           const swalCancelButton = document.querySelector(".swal2-cancel");
 
           if (swalTitle) {
-            swalTitle.style.fontSize = "20px"; // Change this to your desired font size
+            swalTitle.style.fontSize = "20px"; 
           }
           if (swalContent) {
-            swalContent.style.fontSize = "16px"; // Change this to your desired font size
+            swalContent.style.fontSize = "16px"; 
           }
           if (swalConfirmButton) {
-            swalConfirmButton.style.fontSize = "14px"; // Change this to your desired font size
-            swalConfirmButton.style.padding = "10px 10px"; // Adjust padding for smaller button
+            swalConfirmButton.style.fontSize = "14px"; 
+            swalConfirmButton.style.padding = "10px 10px"; 
             swalCancelButton.style.margin = "30px";
-            swalConfirmButton.style.minWidth = "auto"; // Adjust width if needed
+            swalConfirmButton.style.minWidth = "auto"; 
           }
           if (swalCancelButton) {
-            swalCancelButton.style.fontSize = "14px"; // Change this to your desired font size
-            swalCancelButton.style.padding = "10px 10px"; // Adjust padding for smaller button
+            swalCancelButton.style.fontSize = "14px"; 
+            swalCancelButton.style.padding = "10px 10px"; 
             swalCancelButton.style.margin = "20px";
-            swalCancelButton.style.minWidth = "auto"; // Adjust width if needed
+            swalCancelButton.style.minWidth = "auto"; 
           }
         },
       })
@@ -251,17 +252,19 @@ const NavbarUser = () => {
     if (savedStatus) {
       setNewStatus(savedStatus);
       // For Chat Status
-    const chatstatus = localStorage.getItem('status') || 'Online'; // Default to 'Online' if not found
+    const chatstatus = localStorage.getItem('status') || 'Online';
     setButtonText(chatstatus);
     }
   }, []);
 
-  const handleStatusChange = (status) => {
+  const handleStatusChange = (status, onlineTime) => {
+    console.log('Scheduled Online Time:', onlineTime);
     setNewStatus(status);
     let astroid = localStorage.getItem("astroId");
     axiosConfig
     .post(`/user/status_change/${astroid}`, {
       callingStatus: status,
+      onlineTime: onlineTime
     })
     .then((res) => {
       console.log("statusChange", res.data.data);
@@ -283,6 +286,7 @@ const NavbarUser = () => {
       });
     });
   };
+
   const handleshowChangeMode = () => {
     Swal.fire({
       title: 'Calling Status',
@@ -296,7 +300,32 @@ const NavbarUser = () => {
       didOpen: () => {
         // document.getElementById('Wait').addEventListener('click', () => handleStatusChange('Wait'));
         document.getElementById('Online').addEventListener('click', () => handleStatusChange('Online'));
-        document.getElementById('Offline').addEventListener('click', () => handleStatusChange('Offline'));
+        document.getElementById('Offline').addEventListener('click', () => showOfflineScheduler());
+      }
+    });
+  };
+
+  //offline to online scheduler
+  const showOfflineScheduler = () => {
+    Swal.fire({
+      title: 'Schedule Online Time',
+      html: `
+        <label for="onlineTime">Select time to come online:</label>
+        <input type="datetime-local" id="onlineTime" class="swal2-input">
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Schedule',
+      preConfirm: () => {
+        const onlineTime = document.getElementById('onlineTime').value;
+        if (!onlineTime) {
+          Swal.showValidationMessage('Please select a valid date and time');
+        } else {
+          return { onlineTime };
+        }
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleStatusChange('Offline', result.value.onlineTime);
       }
     });
   };
@@ -312,6 +341,9 @@ const NavbarUser = () => {
     axiosConfig
       .post(`/user/acceptNotificationByAstro/${data?._id}`, accept)
       .then((res) => {
+        // console.log(res.data);
+        const userintakeid = res.data.data.userintakeid || ""; 
+        localStorage.setItem('UserIntakeid', userintakeid);
         setAstronotification((prevNotifications) =>
           prevNotifications.filter(
             (notification) => notification._id !== data._id
@@ -494,7 +526,7 @@ const NavbarUser = () => {
           height: "38px",
           position: "absolute",
           top: "23%",
-          right: "26%",
+          right: "25%",
         }}
       >
                <MdCall /> {newStatus || 'Status'} 
