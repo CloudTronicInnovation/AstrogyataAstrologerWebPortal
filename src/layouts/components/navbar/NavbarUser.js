@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from "react";
 import Swal from "sweetalert2";
-import 'sweetalert2/dist/sweetalert2.css';
+import "sweetalert2/dist/sweetalert2.css";
 import { MdCall } from "react-icons/md";
 import { IoChatbox, IoLanguageSharp } from "react-icons/io5";
 import { useState, useEffect } from "react";
@@ -76,6 +76,8 @@ const NavbarUser = () => {
   const getAllnotification = async () => {
     const astroId = localStorage.getItem("astroId");
     const sound = new Audio(notificationSound);
+    let playCount = 0;
+
     try {
       const res = await axiosConfig.get(`/user/wait_queue_list/${astroId}`);
       setAstronotification(res.data.data);
@@ -84,9 +86,17 @@ const NavbarUser = () => {
       const lastNotiCount =
         parseInt(localStorage.getItem("lastNotiCount"), 10) || 0;
       if (res.data.count > lastNotiCount) {
-        sound.play();
-        console.log("Sound play");
+        sound.addEventListener('ended', () => {
+        playCount++;
+        if (playCount < 3) {
+          // Play 2 times
+          sound.play();
+          console.log("sound playing", playCount);
+        }
+      });
+      sound.play();
       }
+
       localStorage.setItem("lastNotiCount", res.data.count);
       setNotiCount(res.data.count);
     } catch (err) {
@@ -104,13 +114,13 @@ const NavbarUser = () => {
   //       // console.log(res);
   //       setAstronotification(res.data.data);
   //       setViewnotify(res.data.count);
-       
+
   //       if(notiCount != res.data.count){
   //         sound.play();
   //         setNotiCount(res.data.count);
   //       }
   //     })
-    
+
   //     .catch((err) => {
   //       console.log(err);
   //     });
@@ -185,22 +195,22 @@ const NavbarUser = () => {
           const swalCancelButton = document.querySelector(".swal2-cancel");
 
           if (swalTitle) {
-            swalTitle.style.fontSize = "20px"; 
+            swalTitle.style.fontSize = "20px";
           }
           if (swalContent) {
-            swalContent.style.fontSize = "16px"; 
+            swalContent.style.fontSize = "16px";
           }
           if (swalConfirmButton) {
-            swalConfirmButton.style.fontSize = "14px"; 
-            swalConfirmButton.style.padding = "10px 10px"; 
+            swalConfirmButton.style.fontSize = "14px";
+            swalConfirmButton.style.padding = "10px 10px";
             swalCancelButton.style.margin = "30px";
-            swalConfirmButton.style.minWidth = "auto"; 
+            swalConfirmButton.style.minWidth = "auto";
           }
           if (swalCancelButton) {
-            swalCancelButton.style.fontSize = "14px"; 
-            swalCancelButton.style.padding = "10px 10px"; 
+            swalCancelButton.style.fontSize = "14px";
+            swalCancelButton.style.padding = "10px 10px";
             swalCancelButton.style.margin = "20px";
-            swalCancelButton.style.minWidth = "auto"; 
+            swalCancelButton.style.minWidth = "auto";
           }
         },
       })
@@ -215,10 +225,11 @@ const NavbarUser = () => {
             .then((res) => {
               console.log(res.data);
               if (res.data.message === "success") {
-                const newStatus = ButtonText === "Online" ? "Offline" : "Online";
+                const newStatus =
+                  ButtonText === "Online" ? "Offline" : "Online";
                 setButtonText(newStatus);
                 // Save in localStorage
-                localStorage.setItem('status', newStatus);
+                localStorage.setItem("status", newStatus);
                 if (newStatus === "Online") {
                   Swal.fire({
                     icon: "success",
@@ -248,48 +259,48 @@ const NavbarUser = () => {
 
   useEffect(() => {
     // For Calling status
-    const savedStatus = localStorage.getItem('callingStatus');
+    const savedStatus = localStorage.getItem("callingStatus");
     if (savedStatus) {
       setNewStatus(savedStatus);
       // For Chat Status
-    const chatstatus = localStorage.getItem('status') || 'Online';
-    setButtonText(chatstatus);
+      const chatstatus = localStorage.getItem("status") || "Online";
+      setButtonText(chatstatus);
     }
   }, []);
 
   const handleStatusChange = (status, onlineTime) => {
-    console.log('Scheduled Online Time:', onlineTime);
+    console.log("Scheduled Online Time:", onlineTime);
     setNewStatus(status);
     let astroid = localStorage.getItem("astroId");
     axiosConfig
-    .post(`/user/status_change/${astroid}`, {
-      callingStatus: status,
-      onlineTime: onlineTime
-    })
-    .then((res) => {
-      console.log("statusChange", res.data.data);
-      localStorage.setItem('callingStatus', status);
-      Swal.fire({
-        title: 'Status Changed',
-        text: 'Status changed successfully!',
-        icon: 'success',
-        confirmButtonText: 'OK'
+      .post(`/user/status_change/${astroid}`, {
+        callingStatus: status,
+        onlineTime: onlineTime,
+      })
+      .then((res) => {
+        console.log("statusChange", res.data.data);
+        localStorage.setItem("callingStatus", status);
+        Swal.fire({
+          title: "Status Changed",
+          text: "Status changed successfully!",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        Swal.fire({
+          title: "Error",
+          text: "An error occurred while changing the status.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
       });
-    })
-    .catch((err) => {
-      console.log(err);
-      Swal.fire({
-        title: 'Error',
-        text: 'An error occurred while changing the status.',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
-    });
   };
 
   const handleshowChangeMode = () => {
     Swal.fire({
-      title: 'Calling Status',
+      title: "Calling Status",
       html: `
      
         <button id="Online" class="swal2-styled swal2-confirm">Online</button>
@@ -299,33 +310,37 @@ const NavbarUser = () => {
       showConfirmButton: false,
       didOpen: () => {
         // document.getElementById('Wait').addEventListener('click', () => handleStatusChange('Wait'));
-        document.getElementById('Online').addEventListener('click', () => handleStatusChange('Online'));
-        document.getElementById('Offline').addEventListener('click', () => showOfflineScheduler());
-      }
+        document
+          .getElementById("Online")
+          .addEventListener("click", () => handleStatusChange("Online"));
+        document
+          .getElementById("Offline")
+          .addEventListener("click", () => showOfflineScheduler());
+      },
     });
   };
 
   //offline to online scheduler
   const showOfflineScheduler = () => {
     Swal.fire({
-      title: 'Schedule Online Time',
+      title: "Schedule Online Time",
       html: `
         <label for="onlineTime">Select time to come online:</label>
         <input type="datetime-local" id="onlineTime" class="swal2-input">
       `,
       showCancelButton: true,
-      confirmButtonText: 'Schedule',
+      confirmButtonText: "Schedule",
       preConfirm: () => {
-        const onlineTime = document.getElementById('onlineTime').value;
+        const onlineTime = document.getElementById("onlineTime").value;
         if (!onlineTime) {
-          Swal.showValidationMessage('Please select a valid date and time');
+          Swal.showValidationMessage("Please select a valid date and time");
         } else {
           return { onlineTime };
         }
-      }
+      },
     }).then((result) => {
       if (result.isConfirmed) {
-        handleStatusChange('Offline', result.value.onlineTime);
+        handleStatusChange("Offline", result.value.onlineTime);
       }
     });
   };
@@ -342,8 +357,8 @@ const NavbarUser = () => {
       .post(`/user/acceptNotificationByAstro/${data?._id}`, accept)
       .then((res) => {
         // console.log(res.data);
-        const userintakeid = res.data.data.userintakeid || ""; 
-        localStorage.setItem('UserIntakeid', userintakeid);
+        const userintakeid = res.data.data.userintakeid || "";
+        localStorage.setItem("UserIntakeid", userintakeid);
         setAstronotification((prevNotifications) =>
           prevNotifications.filter(
             (notification) => notification._id !== data._id
@@ -509,32 +524,30 @@ const NavbarUser = () => {
   return (
     <div className="">
       <ul className="nav navbar-nav navbar-nav-user float-right">
-      <li>
-      <Button
-        onClick={handleshowChangeMode}
-        size="sm"
-        className="ml-1 btn btn-success"
-        style={{
-          padding: "0.5rem",
-          borderRadius: "5px",
-          border: "1px solid #ccc",
-          backgroundColor: "#f9f9f9",
-          color: "#333",
-          fontSize: "0.8rem",
-          fontFamily: "Arial, sans-serif",
-          width: "83px", 
-          height: "38px",
-          position: "absolute",
-          top: "23%",
-          right: "25%",
-        }}
-      >
-               <MdCall /> {newStatus || 'Status'} 
-      </Button>
-    </li>
+        <li>
+          <Button
+            onClick={handleshowChangeMode}
+            size="sm"
+            className="ml-1 btn btn-success"
+            style={{
+              padding: "0.5rem",
+              borderRadius: "5px",
+              border: "1px solid #ccc",
+              backgroundColor: "#f9f9f9",
+              color: "#333",
+              fontSize: "0.8rem",
+              fontFamily: "Arial, sans-serif",
+              width: "83px",
+              height: "38px",
+              position: "absolute",
+              top: "23%",
+              right: "25%",
+            }}
+          >
+            <MdCall /> {newStatus || "Status"}
+          </Button>
+        </li>
 
-
-        
         {/* <li>
           <select
             //  onChange={(e) => LanguageSwitcher(e.target.value)}
@@ -571,14 +584,15 @@ const NavbarUser = () => {
               color: "#333",
               fontSize: "0.8rem",
               fontFamily: "Arial, sans-serif",
-              width: "83px", 
+              width: "83px",
               height: "38px",
               position: "relative",
               right: "130%",
               top: "23%",
             }}
           >
-            <IoLanguageSharp/> <FormattedMessage id="Language" defaultMessage="Language" />
+            <IoLanguageSharp />{" "}
+            <FormattedMessage id="Language" defaultMessage="Language" />
           </Button>
         </li>
         <li>
@@ -594,7 +608,7 @@ const NavbarUser = () => {
               color: "#333",
               fontSize: "0.8rem",
               fontFamily: "Arial, sans-serif",
-              width: "83px", 
+              width: "83px",
               height: "38px",
             }}
           >

@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
   CardBody,
-  CardText,
 } from "reactstrap";
 // import ExtensionsHeader from "../extensionsHeader";
 import Radio from "../../components/@vuexy/radio/RadioVuexy";

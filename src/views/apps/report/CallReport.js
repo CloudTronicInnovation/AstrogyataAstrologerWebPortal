@@ -63,20 +63,13 @@ class CallReport extends React.Component {
         field: "duration",
         filter: true,
         width: 200,
-        cellRendererFramework: (params) => {
-          return (
-            <div>
-              {params?.data?.userdeductedAmt === 0 ? (
-                <>
-                  <span>Not Answered</span>
-                </>
-              ) : (
-                <>
-                  <span>{params.data?.Duration} Min</span>
-                </>
-              )}
-            </div>
-          );
+        valueGetter: (params) => {
+          const totalSeconds = params.data.Duration;
+          const minutes = Math.floor(totalSeconds / 60);
+          const seconds = totalSeconds % 60;
+          const formattedMinutes = String(minutes).padStart(2, '0');
+          const formattedSeconds = String(seconds).padStart(2, '0');
+          return `${formattedMinutes}:${formattedSeconds} Min`;
         },
       },
       {

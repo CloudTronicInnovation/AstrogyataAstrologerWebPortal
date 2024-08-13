@@ -66,6 +66,14 @@ class ChatApp extends PureComponent {
       checkroomflag: true,
       timer: savedTime,
       modal: false,
+
+      birthTime: '',
+      hours: '',
+      minutes: '',
+      dateofbirth: "",
+      gender: "",
+      name: "",
+      kundliData: null,
       birthPlace: "",
       selectedCountry: {
         name: "India",
@@ -102,11 +110,53 @@ class ChatApp extends PureComponent {
         pathname: "/app/report/kundalireport",
         state: { user: this.state.userData, indexValue: this.state.indexValue },
       });
+      localStorage.removeItem("kundliData") // if chat with intakeform then it will happens
     } else {
-      // this.props.history.push({
-      //   pathname: "/app/historycall/callhistory",
-      // });
       this.toggleModal();
+      localStorage.removeItem("userKundaliInfo") // if chat without intakeform then it will happens
+    }
+  };
+
+  changeHandler = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+  dateChangeHandler = (event) => {
+    const timeValue = event.target.value; // "HH:MM" format
+    this.setState({ birthTime: timeValue });
+
+    if (timeValue) {
+      const [hrs, mins] = timeValue.split(':');
+      this.setState({ hours: hrs, minutes: mins });
+    }
+  };
+
+  handleFormSubmit = (e) => {
+    e.preventDefault();
+
+    const { name, gender, dateofbirth, hours, minutes } = this.state;
+    const birthplace = {
+      city: this.state.selectedCity,
+      state: this.state.selectedState,
+      country: this.state.selectedCountry,
+    };
+    const kundliData = {
+      name: name?.toUpperCase(),
+      gender,
+      dateofbirth,
+      hours,
+      minutes,
+      birthplace,
+    };
+    const isEmpty = Object.values(kundliData).some((value) => value === "" || value === null || value === undefined);
+    if (!isEmpty) {
+      localStorage.setItem("kundliData", JSON.stringify(kundliData));
+      this.setState({ kundliData });
+      this.props.history.push({
+        pathname: "/app/report/kundliwithoutintake",
+      });
+    } else {
+      console.log("Please fill in all required fields.");
     }
   };
 
@@ -251,7 +301,7 @@ class ChatApp extends PureComponent {
     if (!this.state.timerStartFlag) {
       let astroId = localStorage.getItem("astroId");
       let userId = localStorage.getItem("CurrentChat_userid");
-      console.log("in start timmer...");
+      // console.log("in start timmer...");
       let value = {
         astroId: astroId,
         userId: userId,
@@ -948,19 +998,24 @@ class ChatApp extends PureComponent {
             </Row>
           </Container>
           <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-            <ModalHeader toggle={this.toggleModal}>
-              {" "}
-              <FormattedMessage
-                id="Kundali Form"
-                defaultMessage="Kundali Form"
-              />
-            </ModalHeader>
-            <ModalBody>
-              <Form>
+            <Form>
+              <ModalHeader toggle={this.toggleModal}>
+                {" "}
+                <FormattedMessage
+                  id="Kundali Form"
+                  defaultMessage="Kundali Form"
+                />
+              </ModalHeader>
+              <ModalBody>
                 <Label>
                   <FormattedMessage id="Name" defaultMessage="Name" />*
                 </Label>
-                <Input type="text" placeholder="Name" />
+                <Input
+                  type="text"
+                  name="name"
+                  onChange={this.changeHandler}
+                  placeholder="Name"
+                />
                 {/* <Label>
                   <FormattedMessage
                     id="Place of Birth"
@@ -976,7 +1031,11 @@ class ChatApp extends PureComponent {
                   />
                   *
                 </Label>
-                <Input type="date" />
+                <Input
+                  type="date"
+                  name="dateofbirth"
+                  onChange={this.changeHandler}
+                />
                 <Label>
                   <FormattedMessage
                     id="Birth Time"
@@ -984,7 +1043,12 @@ class ChatApp extends PureComponent {
                   />
                   *
                 </Label>
-                <Input type="time" placeholder="Birth Time" />
+                <Input
+                  type="time"
+                  name="BirthTime"
+                  onChange={this.dateChangeHandler}
+                  placeholder="Birth Time"
+                />
                 <Label>
                   <FormattedMessage
                     id="Select Gender"
@@ -996,7 +1060,7 @@ class ChatApp extends PureComponent {
                   type="select"
                   name="gender"
                   // value={category}
-                  onChange={this.handleChange1}
+                  onChange={this.changeHandler}
                 >
                   <option>....Select Gender.....</option>
                   <option value="Male">Male</option>
@@ -1038,19 +1102,19 @@ class ChatApp extends PureComponent {
                   getOptionValue={(options) => options["name"]}
                   value={this.state.selectedCity}
                   onChange={(item) => {
-                    this.changeCity(item);
+                    this.setState({ selectedCity: item });
                   }}
                 />
-              </Form>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="primary" onClick={this.handleSubmit}>
-                <FormattedMessage id="Submit" defaultMessage="Submit" />
-              </Button>
-              <Button color="secondary" onClick={this.toggleModal}>
-                <FormattedMessage id="Cancel" defaultMessage="Cancel" />
-              </Button>
-            </ModalFooter>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" onClick={this.handleFormSubmit}>
+                  <FormattedMessage id="Submit" defaultMessage="Submit" />
+                </Button>
+                <Button color="secondary" onClick={this.toggleModal}>
+                  <FormattedMessage id="Cancel" defaultMessage="Cancel" />
+                </Button>
+              </ModalFooter>
+            </Form>
           </Modal>
         </section>
       </div>

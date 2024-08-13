@@ -37,10 +37,10 @@ class CallHistory extends React.Component {
     columnDefs: [
       {
         id: "dashboard",
-        headerName: "S.No",
+        headerName: "ID",
         valueGetter: "node.rowIndex + 1",
         field: "node.rowIndex + 1",
-        width: 100,
+        width: 70,
         filter: true,
       },
 
@@ -48,7 +48,7 @@ class CallHistory extends React.Component {
         headerName: "Caller Sid",
         field: "callerid",
         filter: true,
-        width: 200,
+        width: 300,
         cellRendererFramework: (params) => {
           return (
             <div>
@@ -62,11 +62,12 @@ class CallHistory extends React.Component {
         headerName: "Name",
         field: "firstname",
         filter: true,
-        width: 200,
+        width: 100,
         cellRendererFramework: (params) => {
+          const fullName = params.data?.userid?.fullname || "NA"
           return (
             <div>
-              <span>{params.data?.userid?.fullname}</span>
+              <span>{fullName}</span>
             </div>
           );
         },
@@ -76,7 +77,7 @@ class CallHistory extends React.Component {
         headerName: "Date",
         field: "date",
         filter: true,
-        width: 200,
+        width: 130,
         cellRendererFramework: (params) => {
           return (
             <div className="d-flex align-items-center cursor-pointer">
@@ -90,24 +91,25 @@ class CallHistory extends React.Component {
         headerName: "Duration",
         field: "Duration",
         filter: true,
-        width: 200,
-        cellRendererFramework: (params) => {
-          return (
-            <div>
-              <span>{params.data?.Duration} Min</span>
-            </div>
-          );
-        },
+        width: 120,
+        valueGetter: (params) => {
+          const totalSeconds = params.data.Duration;
+          const minutes = Math.floor(totalSeconds / 60);
+          const seconds = totalSeconds % 60;
+          const formattedMinutes = String(minutes).padStart(2, '0');
+          const formattedSeconds = String(seconds).padStart(2, '0');
+          return `${formattedMinutes}:${formattedSeconds}`;
+        }
       },
       {
-        headerName: "Amount Credited",
+        headerName: "Credited",
         field: "Amount",
         filter: true,
-        width: 200,
+        width: 115,
         cellRendererFramework: (params) => {
           return (
             <div>
-              <span>{params.data?.astroCredited}</span>
+              <span>{Math.floor(params.data?.astroCredited)} ₹</span>
             </div>
           );
         },
@@ -115,13 +117,13 @@ class CallHistory extends React.Component {
 
       {
         headerName: "Status",
-        field: "dateofregister",
+        field: "Status",
         filter: true,
-        width: 200,
+        width: 130,
         cellRendererFramework: (params) => {
           return (
             <div>
-              <span>{params?.data?.Status}</span>
+              <span>{params?.data?.Status === "completed" ? "completed" : "No Answered" }</span>     
             </div>
           );
         },

@@ -216,9 +216,10 @@ const PayoutAddReqEdit = lazy(() =>
 );
 const UserKundaliReport = lazy(() =>
   import("./views/apps/report/UserKundaliReport")
-
 );
-
+const KundliWithoutintake = lazy(() => 
+  import("./views/apps/report/KundliWithoutintake")
+);
 
 // setting
 const addBank = lazy(() => import("./views/apps/setting/bank/AddBank"));
@@ -626,9 +627,13 @@ class AppRouter extends React.Component {
               path="/app/report/payoutaddreqedit"
               component={PayoutAddReqEdit}
             />
-             <AppRoute
+            <AppRoute
               path="/app/report/kundalireport"
               component={UserKundaliReport}
+            />
+            <AppRoute
+            path="/app/report/kundliwithoutintake"
+            component={KundliWithoutintake}
             />
             {/* Call Management */}
             <AppRoute
